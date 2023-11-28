@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <% if (tag == 'login ok') { %>
+        <%=nickname%>님 환영합니다.
+        <a href="/logout">logout</a>
+    <% } else { %>
+        <%=nickname%>
+        <a href="/login">login</a>
+    <% } %>
+    <a href="/job">취업게시판 이동</a>
+</body>
+</html>
