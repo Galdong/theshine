@@ -74,6 +74,9 @@ const output = {
             }
         }); 
     },  
+    getApply: (req, res) => {
+        res.send("<script>alert('신청이 완료되었습니다.');location.href='/edu';</script>");
+    }
 }
 
 const process = {
@@ -118,6 +121,33 @@ const process = {
             if (result) res.json({success: true});
         });
     },
+    postApply: (req, res) => {
+        const boardno = parseInt(req.params.boardno);
+        const nickname = req.session.nickname;
+        const query = "SELECT eduboard.BOARD_NO, eduboard.title, eduboard.category, eduboard.status, users.name, users.nickname, users.address, users.mphone FROM eduboard INNER JOIN users ON eduboard.nickname = users.nickname WHERE BOARD_NO = ?;";
+        const applydate = new Date();
+        db.query(query, [boardno], (err, result) => {
+            if (err) console.log(err);
+            if (result) {
+                const query2 = "INSERT INTO apply (BOARD_NO, title, category, status, name, nickname, address, mphone, applydate) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                dbdata = [
+                    boardno,
+                    result[0].title,
+                    result[0].category,
+                    result[0].status,
+                    result[0].name,
+                    result[0].nickname,
+                    result[0].address,
+                    result[0].mphone,
+                    applydate
+                ];
+                db.query(query2, dbdata, (err, data) => {
+                    if (err) console.log(err);
+                    if (data) res.json({success: true});
+                });
+            }
+        });
+    }
 }
 
 const isLogined = (req, res, next) => {

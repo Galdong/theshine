@@ -51,20 +51,19 @@ function post() {
     fetch("/edu/write", {
         method: "POST",
         headers: {
-            "Content-Type": "application/json" // json타입인것을 명시
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify(req) // req object파일을 문자열형태로 바꿔줌
-    })  //fetch라는 것을 이용해 브라우저에 입력한 값을 서버에 전송
-    .then((res) => res.json()) //서버로 부터 응답이 오면 json 메소드를 호출해서
-                               //서버에 응답이 다 받아지는 순간 promise 객체 반환
-    .then((res) => { // promise 객체 res에 접근
+        body: JSON.stringify(req)
+    }) 
+    .then((res) => res.json())
+    .then((res) => { 
         if (res.success) {
-            location.href = "/edu"; // res.success = true이면 로그인페이지로이동
+            location.href = "/edu";
         } else {
-            alert(res.msg); // false이면 메시지출력
+            alert(res.msg);
         }
     })
-    .catch((err) => { // 예외처리
+    .catch((err) => {
         console.error("글 작성 중 에러 발생");
     });
        
