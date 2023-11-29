@@ -1,0 +1,12 @@
+제목 : <%=data[0].title%> <br>
+작성자: <%=data[0].nickname%> <br>
+내용 : <%=data[0].content%> <br>
+강사이름 : <%=data[0].instructor_name%> <br>
+카테고리 : <%=data[0].category%> <br>
+교육기간 : <%=data[0].edu_period%> <br>
+모집인원 : <%=data[0].recruit_num%> <br>
+접수기간 : <%=data[0].receipt_period%> <br>
+장소 : <%=data[0].location%> <br>
+상태 : <% if (data[0].status == 'ing') { %> 접수중 <% } else if (data[0].status == 'end') { %> 접수마감 <% } %><br>
+<a href="/edu/edit/<%=data[0].BOARD_NO%>">수정</a>
+<a href="/edu/delete/<%=data[0].BOARD_NO%>">삭제</a>

@@ -30,6 +30,7 @@ app.use(session(options));
 const home = require("./src/routes/home");
 const jobRouter = require("./src/routes/job/job");
 const hobbyRouter = require("./src/routes/hobby/hobby");
+const eduRouter = require("./src/routes/edu/edu");
 
 app.set("views","./src/views");
 app.set("view engine", "ejs");
@@ -42,6 +43,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
    제대로 인식되지 않는 문제 해결 */
 app.use("/", home); // use -> 미들웨어 등록해주는 메소드
 app.use("/job", jobRouter); // job게시판 라우팅등록
-app.use("/hobby", hobbyRouter);
+app.use("/hobby", hobbyRouter); // hobby게시판 라우팅등록
+app.use("/edu", eduRouter); //edu게시판 라우팅등록
 
 module.exports = app; // bin/www.js 에 내보내주려고
