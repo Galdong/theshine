@@ -2,13 +2,28 @@ const db = require('../../config/db');
 const Job = require("../../models/job/Job");
 
 const output = {
-    getList: (req, res) => {
+    getJob: (req, res) => {
         const query = "SELECT * FROM jobboard ORDER BY BOARD_NO DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
             if (result) res.render("job/jobList", {
                 'data':result,
-                'num':result.length,
+                'length':result.length - 1,
+                'page': 1,
+                'page_num': 10,
+            });
+        });
+    },
+    getList: (req, res) => {
+        const page = parseInt(req.params.page);
+        const query = "SELECT * FROM jobboard ORDER BY BOARD_NO DESC";
+        db.query(query, (err, result) => {
+            if (err) console.log(err);
+            if (result) res.render("job/jobList", {
+                'data':result,
+                'length':result.length - 1,
+                'page': page,
+                'page_num': 10,
             });
         });
     },
@@ -22,11 +37,10 @@ const output = {
                 if (err) console.log(err);
                 if (result) res.render("job/detailView", {'data':result});
             });
-        }    
+        }   
     },
     getWrite: (req, res) => {
         const nickname = req.session.nickname;
-        const isLogin = req.session.is_logined;
         res.render("job/jobWrite", {'nickname':nickname});
     },
     getEdit: (req, res) => {
@@ -108,7 +122,7 @@ const process = {
 const isLogined = (req, res, next) => {
     const is_logined = req.session.is_logined;
     if(!is_logined) {
-        res.send("<script>alert('로그인이 필요한 서비스입니다.');location.href=history.back();</script>");
+        res.send("<script>alert('로그인이 필요한 서비스입니다.');location.href='/login';</script>");
     } else {
         next();
     }

@@ -1,19 +1,40 @@
-<table>
-    <tr>
-        <th>제목</th>
-        <th>내용</th>
-        <th>작성자</th>
-        <th>기업명</th>
-        <th>작성일</th>
-    </tr>
-    <% for (let i=0; i<num; i++) { %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table border="1">
         <tr>
-            <td><a href="job/<%=data[i].BOARD_NO%>"><%=data[i].title%></a></td>
-            <td><%=data[i].content%></td>
-            <td><%=data[i].nickname%></td>
-            <td><%=data[i].companyname%></td>
-            <td><%=data[i].POST_DATE%></td>
+            <th>제목</th>
+            <th>내용</th>
+            <th>작성자</th>
+            <th>기업명</th>
+            <th>작성일</th>
         </tr>
-    <% } %>
+        <% for (let i=(page*page_num) - page_num; i<(page*page_num); i++) { %>
+            <% if (i > length) { %>
+                <% i++; %>
+            <% } else { %>
+            <tr>
+                <td><a href="/job/list/<%=page%>/<%=data[i].BOARD_NO%>"><%=data[i].title%></a></td>
+                <td><%=data[i].content%></td>
+                <td><%=data[i].nickname%></td>
+                <td><%=data[i].companyname%></td>
+                <td><%=data[i].POST_DATE%></td>
+            </tr>
+            <% } %>
+        <% } %>
+        <tr>
+            <td colspan="5">
+                <% for(let j=0; j<(length/page_num); j++) { %>
+                [<a href="/job/list/<%=j+1%>"><%=j+1%></a>]
+                <% } %>
+            </td>
+        </tr>
+    </table>
     <a href="/job/write">글쓰기</a>
-</table>
+</body>
+</html>

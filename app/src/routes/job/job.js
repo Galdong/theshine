@@ -3,11 +3,12 @@ const router = express.Router();
 
 const ctrl = require("./job.ctrl");
 
-router.get("/", ctrl.output.getList);
-router.get("/write", ctrl.output.getWrite);
-router.get("/:boardno", ctrl.output.getView);
+router.get("/", ctrl.output.getJob);
+router.get("/list/:page", ctrl.output.getList);
+router.get("/write", ctrl.isLogined, ctrl.output.getWrite);
+router.get("/list/:page/:boardno", ctrl.output.getView);
 router.get("/edit/:boardno", ctrl.isLogined, ctrl.output.getEdit);
-router.get("/delete/:boardno", ctrl.output.getDelete);
+router.get("/delete/:boardno", ctrl.isLogined, ctrl.output.getDelete);
 
 router.post("/write", ctrl.process.postWrite);
 router.post("/edit/:boardno", ctrl.process.postEdit);
