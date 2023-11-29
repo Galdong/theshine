@@ -29,6 +29,7 @@ app.use(session(options));
 // 라우팅
 const home = require("./src/routes/home");
 const jobRouter = require("./src/routes/job/job");
+const hobbyRouter = require("./src/routes/hobby/hobby");
 
 app.set("views","./src/views");
 app.set("view engine", "ejs");
@@ -40,6 +41,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 /* URL을 통해 전달되는 데이터에 한글, 공백 등과 같은 문자가 포함될 경우
    제대로 인식되지 않는 문제 해결 */
 app.use("/", home); // use -> 미들웨어 등록해주는 메소드
-app.use("/job", jobRouter);
+app.use("/job", jobRouter); // job게시판 라우팅등록
+app.use("/hobby", hobbyRouter);
 
 module.exports = app; // bin/www.js 에 내보내주려고

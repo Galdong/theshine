@@ -36,8 +36,9 @@ const process = {
             const user = await UserStorage.getUserInfo(client.id);
                 // getUserInfo가 다 실행되기 전에 실행되지 말라고 비동기처리 await
                 // await을 호출하기 위해 login에 async 붙이기
-            const password = await crypto.makePasswordHashed(client.id, client.password);
             if (user) {
+                const password = await crypto.makePasswordHashed(client.id, client.password);
+                // if문 밖에 선언하니 crypto모듈 undefined떠서 if문 내로 수정
                 if (user.id === client.id && password === user.password) {
                     req.session.is_logined = true;
                     req.session.nickname = user.nickname;
