@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>주소</th>
+            <th>전화번호</th>
+            <th>회원 유형</th>
+            <th>가입일</th>
+            <th>닉네임</th>
+        </tr>
+        <% for (let i=0; i<length; i++) { %>
+            <tr>
+                <td><%=data[i].id%></a></td>
+                <td><%=data[i].name%></td>
+                <td><%=data[i].address%></td>
+                <td><%=data[i].mphone%></td>
+                <td><%=data[i].cat%></td>
+                <td><%=data[i].in_date%></td>
+                <td><%=data[i].nickname%></td>
+            </tr>
+        <% } %>
+    </table>
+</body>
+</html>

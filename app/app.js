@@ -31,6 +31,7 @@ const home = require("./src/routes/home");
 const jobRouter = require("./src/routes/job/job");
 const hobbyRouter = require("./src/routes/hobby/hobby");
 const eduRouter = require("./src/routes/edu/edu");
+const adminRouter = require("./src/routes/admin/admin");
 
 app.set("views","./src/views");
 app.set("view engine", "ejs");
@@ -45,5 +46,6 @@ app.use("/", home); // use -> 미들웨어 등록해주는 메소드
 app.use("/job", jobRouter); // job게시판 라우팅등록
 app.use("/hobby", hobbyRouter); // hobby게시판 라우팅등록
 app.use("/edu", eduRouter); //edu게시판 라우팅등록
+app.use("/admin", adminRouter); // 관리자게시판 라우팅등록
 
 module.exports = app; // bin/www.js 에 내보내주려고

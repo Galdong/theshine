@@ -2,93 +2,36 @@ const db = require('../../config/db');
 const Edu = require("../../models/edu/Edu");
 
 const output = {
-    getEdu: (req, res) => {
-        const query = "SELECT * FROM eduboard ORDER BY BOARD_NO DESC";
+    getAdmin: (req, res) => {
+        res.render("admin/adminList")
+    },
+    getAuth: (req, res) => {
+        const query = "SELECT * FROM authcode;";
+        db.query(query, (err,result) => {
+            if (err) console.log(err);
+            if (result) res.render("admin/adminAuthcode", {'code': result[0].code});
+        })
+    },
+    getApplylist: (req, res) => {
+        const query = "SELECT * FROM apply ORDER BY applydate DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("edu/eduList", {
-                'data':result,
-                'length':result.length - 1,
-                'page': 1,
-                'page_num': 10,
+            if (result) res.render("admin/adminApplylist", {
+                'data': result,
+                'length': result.length,
             });
         });
     },
-    getList: (req, res) => {
-        const page = parseInt(req.params.page);
-        const query = "SELECT * FROM eduboard ORDER BY BOARD_NO DESC";
+    getUsers: (req, res) => {
+        const query = "SELECT id, name, address, mphone, cat, in_date, nickname FROM users ORDER BY in_date DESC;";
         db.query(query, (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("edu/eduList", {
-                'data':result,
-                'length':result.length - 1,
-                'page': page,
-                'page_num': 10,
+            if (result) res.render("admin/adminUsers", {
+                'data': result,
+                'length': result.length
             });
         });
-    },
-    getView: (req, res) => {
-        const boardno = req.params.boardno;
-        if (isNaN(boardno)) {
-            parseInt(boardno);
-        } else {
-            const query = "SELECT * FROM eduboard where BOARD_NO = ?";
-            db.query(query, [boardno], (err, result) => {
-                if (err) console.log(err);
-                if (result) res.render("edu/eduView", {'data':result});
-            });
-        }   
-    },
-    getWrite: (req, res) => {
-        const nickname = req.session.nickname;
-        res.render("edu/eduWrite", {'nickname':nickname});
-    },
-    getEdit: (req, res) => {
-        const boardno = parseInt(req.params.boardno);
-        const nickname = req.session.nickname;
-        const query = "SELECT * FROM eduboard where BOARD_NO = ?";
-        db.query(query, [boardno], (err, result) => {
-            if (err) console.log(err);
-            if (result) {
-                if (result[0].nickname !== nickname) {
-                    res.send("<script>alert('본인이 작성한 글만 수정할 수 있습니다.');location.href=history.back();</script>");
-                } else {
-                    res.render("edu/eduEdit", {'data':result, 'nickname':nickname});
-                }
-            }
-        });    
-    },
-    
-    getDelete: (req, res) => {
-        const boardno = parseInt(req.params.boardno);
-        const nickname = req.session.nickname;
-        const query = "SELECT * FROM eduboard where BOARD_NO = ?";
-        db.query(query, [boardno], (err, result) => {
-            if (err) console.log(err);
-            if (result) {
-                if (result[0].nickname !== nickname) {
-                    res.send("<script>alert('본인이 작성한 글만 삭제할 수 있습니다.');location.href=history.back();</script>");
-                } else {
-                    res.render("edu/eduDelete", {'nickname':nickname});
-                }
-            }
-        }); 
-    },  
-    getApply: (req, res) => {
-        res.send("<script>alert('신청이 완료되었습니다.');location.href='/edu';</script>");
-    },
-    getView2: (req, res) => {
-        const boardno = req.params.boardno;
-        if (isNaN(boardno)) {
-            parseInt(boardno);
-        } else {
-            const query = "SELECT * FROM eduboard where BOARD_NO = ?";
-            db.query(query, [boardno], (err, result) => {
-                if (err) console.log(err);
-                if (result) res.render("edu/eduView", {'data':result});
-            });
-        }   
-    },
+    }
 }
 
 const process = {
