@@ -22,8 +22,19 @@ exports.savec = async(userInfo) => { // 일반사용자 회원가입
         return { success: false, msg: '이미 존재하는 아이디입니다.'};
     }
     return new Promise((resolve, reject) => {
-        const query = "INSERT INTO users (id, name, password, address, mphone, cat, in_date, nickname, salt) VALUES(?, ?, ?, ?, ?, 'customer', ?, ?, ?);";
-        db.query(query, [userInfo.id, userInfo.name, password, userInfo.address, userInfo.mphone, date, userInfo.nickname, salt], (err) => {
+        const query = "INSERT INTO users (id, name, password, address, mphone, cat, in_date, nickname, salt, email) VALUES(?, ?, ?, ?, ?, 'customer', ?, ?, ?, ?);";
+        const dbdata = [
+            userInfo.id, 
+            userInfo.name, 
+            password, 
+            userInfo.address, 
+            userInfo.mphone, 
+            date, 
+            userInfo.nickname, 
+            salt,
+            userInfo.email,
+        ];
+        db.query(query, dbdata, (err) => {
             if (err) reject(`${err}`);
             else resolve({ success: true });
         });           
@@ -47,8 +58,17 @@ exports.savep = async (userInfo) => { // 공급자 회원가입
         return { success: false, msg: '이미 존재하는 아이디입니다.'};
     }
     return new Promise((resolve, reject) => {
-        const query1 = "INSERT INTO users (id, name, password, cat, in_date, nickname, salt) VALUES(?, ?, ?, 'provider', ?, ?, ?);";
-        db.query(query1, [userInfo.id, userInfo.name, password, date, userInfo.nickname, salt], (err) => {
+        const query1 = "INSERT INTO users (id, name, password, cat, in_date, nickname, salt, email) VALUES(?, ?, ?, 'provider', ?, ?, ?, ?);";
+        const dbdata = [
+            userInfo.id, 
+            userInfo.name, 
+            password, 
+            date, 
+            userInfo.nickname, 
+            salt,
+            userInfo.email
+        ];
+        db.query(query1, dbdata, (err) => {
             if (err) reject(`${err}`);
             else resolve({ success: true });
         });
@@ -66,4 +86,31 @@ exports.savep = async (userInfo) => { // 공급자 회원가입
             else resolve({ success: true });
         });       
     });
+}
+
+exports.generateRandom = function(min, max) {
+    const randNum = Math.floor(Math.random() * (max - min + 1)) + min;
+    return randNum;
+}
+
+exports.emailSecurity = function (userEmail) {
+    var id = userEmail.split('@')[0];
+    var mail = userEmail.split('@')[1];
+    var maskingId = function(id){
+      var splitId = id.substring(0,3);
+      for(var i = 1; i < id.length; i++){
+          splitId += '*';
+      }
+      return splitId;
+    };
+    var maskingMail = function(mail){
+      var splitMail = '';
+      for(var i = 1; i < mail.length; i++){
+          splitMail += '*';
+      }
+      splitMail += mail.substring(mail.length-1,mail.length);
+      return splitMail;
+    };
+    userEmail = maskingId(id) + '@' + maskingMail(mail);
+    return userEmail;
 }

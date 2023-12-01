@@ -46,8 +46,9 @@ class User { // UserStorage 데이터를 가지고 검증 및 조작하는 역�
                 const response = await UserStorage.savep(client);
                 return response;
             }
-        } catch (err) {
             return { success: false, msg: '인증코드가 틀립니다.' };
+        } catch (err) {
+            return { success: false, msg: err };
         }
     }
 

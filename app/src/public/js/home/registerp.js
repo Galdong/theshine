@@ -5,6 +5,7 @@ const id = document.querySelector("#id"),
     password = document.querySelector("#password"),
     confirmPassword = document.querySelector("#confirm-password"),
     nickname = document.querySelector('#nickname'),
+    email = document.querySelector('#email'),
     code = document.querySelector("#code"),
     registerBtn = document.querySelector("#button");
 
@@ -16,6 +17,7 @@ function registerp() {
     if (!password.value || !confirmPassword.value) return alert("비밀번호를 입력해주세요.");
     if (!code.value) return alert("인증코드를 입력해주세요.");
     if (!nickname.value) return alert("닉네임을 입력해주세요.");
+    if (!email.value) return alert("이메일을 입력해주세요.");
     if (password.value !== confirmPassword.value) {
         return alert("비밀번호가 일치하지 않습니다.");
     }
@@ -26,6 +28,7 @@ function registerp() {
         password : password.value,
         code : code.value,
         nickname : nickname.value,
+        email : email.value
     };
     
     fetch("/registerp", {

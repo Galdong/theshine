@@ -2,6 +2,7 @@ const UserStorage = require("../../models/home/UserStorage");
 const User = require("../../models/home/User");
 const auth = require("./auth");
 const crypto = require("./crypto");
+// const smtpTransport = require("../../config/email");
 
 const output = {
     home: (req, res) => {
@@ -26,7 +27,10 @@ const output = {
     },
     registercat: (req, res) => {
         res.render("home/registercat");
-    }
+    },
+    // getFindpw: (req, res) => {
+    //     res.render("home/findpw");
+    // },
 };
 
 const process = {
@@ -65,6 +69,32 @@ const process = {
         const response = await user.registerp();
         return res.json(response);
     },
+    // findpw: async (req, res) => {
+    //     const query = "SELECT email FROM users WHERE id= ?;";
+    //     db.query(query, req.body.id, (err, result) => {
+    //         if (err) console.log(err);
+    //         if (result) {
+    //             const number = UserStorage.generateRandom(111111, 999999);
+    //             const email = result[0].email;
+    //             const maskingEmail = UserStorage.emailSecurity(email);
+    //             const mailOptions = {
+    //                 from : "qwe3488@naver.com",
+    //                 to : email,
+    //                 subject : "챌린지 플러스 인증코드입니다.",
+    //                 html : '<h1>인증번호 :'+ number +'</h1>'
+    //             }
+    //             smtpTransport.sendMail(mailOptions, (err, response) => {
+    //                 console.log("response", response);
+    //                 if (err) {
+    //                     res.json({success: false, msg: '메일 전송에 실패하였습니다.'});
+    //                     smtpTransport.close() // 전송종료
+    //                 } else {
+    //                     res.render("home/findpw2", {'data': result, 'code': number, 'maskingEmail': maskingEmail});
+    //                 }
+    //             });
+    //         }
+    //     });  
+    // },
 };
 
 module.exports = {

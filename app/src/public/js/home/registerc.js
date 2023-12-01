@@ -7,6 +7,7 @@ const id = document.querySelector("#id"),
     address = document.querySelector('#address'),
     mphone = document.querySelector('#mphone'),
     nickname = document.querySelector('#nickname'),
+    email = document.querySelector('#email'),
     registerBtn = document.querySelector("#button");
 
 registerBtn.addEventListener("click", registerc);
@@ -18,6 +19,7 @@ function registerc() {
     if (!address.value) return alert("주소를 입력해주세요.");
     if (!mphone.value) return alert("전화번호를 입력해주세요.");
     if (!nickname.value) return alert("닉네임을 입력해주세요.");
+    if (!email.value) return alert("이메일을 입력해주세요.");
     if (password.value !== confirmPassword.value) {
         return alert("비밀번호가 일치하지 않습니다.");
     }
@@ -29,6 +31,7 @@ function registerc() {
         address : address.value,
         mphone : mphone.value,
         nickname : nickname.value,
+        email : email.value
     };
     
     fetch("/registerc", {
