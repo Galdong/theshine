@@ -57,22 +57,6 @@ const output = {
                 }
             }
         });    
-    },
-    
-    getDelete: (req, res) => {
-        const boardno = parseInt(req.params.boardno);
-        const nickname = req.session.nickname;
-        const query = "SELECT * FROM jobboard where BOARD_NO = ?";
-        db.query(query, [boardno], (err, result) => {
-            if (err) console.log(err);
-            if (result) {
-                if (result[0].nickname !== nickname) {
-                    res.send("<script>alert('본인이 작성한 글만 삭제할 수 있습니다.');location.href=history.back();</script>");
-                } else {
-                    res.render("job/jobDelete", {'nickname':nickname});
-                }
-            }
-        }); 
     },  
 }
 
@@ -111,11 +95,21 @@ const process = {
     postDelete: (req, res) => {
         const boardno = parseInt(req.params.boardno);
         const nickname = req.session.nickname;
-        const query = "DELETE FROM jobboard WHERE BOARD_NO = ?;";
-        db.query(query, [boardno], (err, result) => {
-            if (err) return console.log(err);
-            if (result) res.json({success: true});
-        });
+        const query1 = "SELECT * FROM jobboard where BOARD_NO = ?";
+        db.query(query1, [boardno], (err, result) => {
+            if (err) console.log(err);
+            if (result) {
+                if (result[0].nickname !== nickname) {
+                    res.send("<script>alert('본인이 작성한 글만 삭제할 수 있습니다.');location.href=history.back();</script>");
+                } else {
+                    const query2 = "DELETE FROM jobboard WHERE BOARD_NO = ?;";
+                    db.query(query2, [boardno], (err, result) => {
+                        if (err) return console.log(err);
+                        if (result) res.json({success: true});
+                    });
+                }
+            }
+        }); 
     },
 }
 

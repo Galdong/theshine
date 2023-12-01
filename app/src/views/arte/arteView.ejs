@@ -20,9 +20,9 @@
     접수기간 : <%=data[0].receipt_period%> <br>
     장소 : <%=data[0].location%> <br>
     상태 : <% if (data[0].status == 'ing') { %> 접수중 <% } else if (data[0].status == 'end') { %> 접수마감 <% } %><br>
-    <a href="/arte/edit/<%=data[0].BOARD_NO%>">수정</a>
-    <a href="/arte/delete/<%=data[0].BOARD_NO%>">삭제</a><br>
-    <p id="button" class="btn">신청하기</p>
+    <p class="btn"><a href="/arte/edit/<%=data[0].BOARD_NO%>">수정</a></p>
+    <p id="dbutton" class="btn">삭제</p>
+    <p id="abutton" class="btn">신청하기</p>
     <script src="/js/arte/arteapply.js"></script>
 </body>
 </html>

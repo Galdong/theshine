@@ -1,18 +1,15 @@
 const select = (selector) => document.querySelector(selector);
 
-const yesbutton = select('#yesbutton');
-const nobutton = select('#nobutton');
+const deleteBtn = select('#dbutton');
 
-yesbutton.addEventListener("click", deleteform);
-nobutton.addEventListener("click", goback);
+deleteBtn.addEventListener("click", deleteform);
 
-function goback() {
-    history.go(-1);
-}
+const boardno = window.location.href.split('/')[6];
 
 function deleteform() {
     const req = {};
-    const url = window.location.href;
+    const url = `/club/delete/${boardno}`;
+    
     fetch(url, {
         method: "POST",
         headers: {

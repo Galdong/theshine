@@ -58,22 +58,6 @@ const output = {
             }
         });    
     },
-    
-    getDelete: (req, res) => {
-        const boardno = parseInt(req.params.boardno);
-        const nickname = req.session.nickname;
-        const query = "SELECT * FROM clubboard where BOARD_NO = ?";
-        db.query(query, [boardno], (err, result) => {
-            if (err) console.log(err);
-            if (result) {
-                if (result[0].nickname !== nickname) {
-                    res.send("<script>alert('본인이 작성한 글만 삭제할 수 있습니다.');location.href=history.back();</script>");
-                } else {
-                    res.render("club/clubDelete", {'nickname':nickname});
-                }
-            }
-        }); 
-    },  
 }
 
 const process = {
@@ -105,11 +89,21 @@ const process = {
     postDelete: (req, res) => {
         const boardno = parseInt(req.params.boardno);
         const nickname = req.session.nickname;
-        const query = "DELETE FROM clubboard WHERE BOARD_NO = ?;";
-        db.query(query, [boardno], (err, result) => {
-            if (err) return console.log(err);
-            if (result) res.json({success: true});
-        });
+        const query1 = "SELECT * FROM clubboard where BOARD_NO = ?";
+        db.query(query1, [boardno], (err, result) => {
+            if (err) console.log(err);
+            if (result) {
+                if (result[0].nickname !== nickname) {
+                    res.send("<script>alert('본인이 작성한 글만 삭제할 수 있습니다.');location.href=history.back();</script>");
+                } else {
+                    const query2 = "DELETE FROM clubboard WHERE BOARD_NO = ?;";
+                    db.query(query2, [boardno], (err, result) => {
+                        if (err) return console.log(err);
+                        if (result) res.json({success: true});
+                    });
+                }
+            }
+        }); 
     },
 }
 
