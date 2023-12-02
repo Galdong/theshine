@@ -107,17 +107,19 @@ const output = {
 const process = {
     postWrite: async (req, res) => {
         const nickname = req.session.nickname;
+        const image = req.file.filename;
         const arte = new Arte(req.body);
-        const response = await arte.post(nickname);
+        const response = await arte.post(nickname, image);
         return res.json(response);
     },
     postEdit: async (req, res) => {
         const boardno = req.params.boardno;
+        const image = req.file.filename;
         if (isNaN(boardno)) {
             parseInt(boardno);
         } else {
             const updatedate = new Date();
-            const query = "UPDATE arteboard SET title=?, content=?, instructor_name=?, category=?, edu_period=?, recruit_num=?, receipt_period=?, location=?, status=?, UPDATE_DATE=? WHERE BOARD_NO=?;";
+            const query = "UPDATE arteboard SET title=?, content=?, instructor_name=?, category=?, edu_period=?, recruit_num=?, receipt_period=?, location=?, status=?, UPDATE_DATE=?, filename=? WHERE BOARD_NO=?;";
             const dbdata = [
                 req.body.title,
                 req.body.content,
@@ -129,7 +131,8 @@ const process = {
                 req.body.location,
                 req.body.status,
                 updatedate,
-                boardno
+                image,
+                boardno,
             ];
             db.query(query, dbdata, (err, result) => {
                 if (err) console.log(err);

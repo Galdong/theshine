@@ -22,19 +22,20 @@
     <p class="message">Error</p>
     <form class="form" enctype="multipart/form-data">
         <p>작성자: <%=nickname%></p>
-        <p><input id="title" type="text" placeholder="제목"/></p>
-        <p><input id="content" type="textarea" placeholder="내용을 입력해 주세요."/></p>
-        <p><input id="instructor_name" type="text" placeholder="강사명"/></p>
+        <p><input id="title" name="title" type="text" placeholder="제목"/></p>
+        <p><input id="content" name="content" type="textarea" placeholder="내용을 입력해 주세요."/></p>
+        <p><input id="image" name="image" type="file"></p>
+        <p><input id="instructor_name" name="instructor_name" type="text" placeholder="강사명"/></p>
         <p><select id="category" name="category">
             <option value="0">카테고리</option>
             <option value="certificate">자격증 과정</option>
             <option value="foundation">창업 과정</option>
             <option value="tech">전문 기술 과정</option>
         </select></p>
-        <p><input id="edu_period" type="text" placeholder="교육기간"/></p>
-        <p><input id="recruit_num" type="text" placeholder="모집인원"/></p>
-        <p><input id="receipt_period" type="text" placeholder="접수기간"/></p>
-        <p><input id="location" type="text" placeholder="장소"/></p>
+        <p><input id="edu_period" name="edu_period" type="text" placeholder="교육기간"/></p>
+        <p><input id="recruit_num" name="recruit_num" type="text" placeholder="모집인원"/></p>
+        <p><input id="receipt_period" name="receipt_period" type="text" placeholder="접수기간"/></p>
+        <p><input id="location" name="location" type="text" placeholder="장소"/></p>
         <p><select id="status" name="status">
             <option value="ing" selected="selected">접수중</option>
             <option value="end">접수마감</option>

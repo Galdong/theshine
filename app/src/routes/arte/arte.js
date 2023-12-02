@@ -2,6 +2,7 @@ const express = require("express"); // express 새로 불러와줌
 const router = express.Router();
 
 const ctrl = require("./arte.ctrl");
+const upload = require("../../config/multer");
 
 router.get("/", ctrl.output.getArte);
 router.get("/list/:page", ctrl.output.getList);
@@ -13,8 +14,8 @@ router.get("/:category", ctrl.output.getCat);
 router.get("/:category/:page", ctrl.output.getCatpage);
 router.get("/:boardno", ctrl.output.getView2); // 관리자 페이지에서 게시글로 이동하기 위해 따로 구현
 
-router.post("/write", ctrl.process.postWrite);
-router.post("/edit/:boardno", ctrl.process.postEdit);
+router.post("/write", upload.single('image'), ctrl.process.postWrite); // 파일 업로드 미들웨어 추가
+router.post("/edit/:boardno", upload.single('image'), ctrl.process.postEdit);
 router.post("/delete/:boardno", ctrl.isLogined, ctrl.process.postDelete);
 router.post("/apply/:boardno", ctrl.isLogined, ctrl.process.postApply);
 

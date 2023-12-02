@@ -1,15 +1,16 @@
 const db = require('../../config/db');
 
-exports.postData = async(data, nickname) => { 
+exports.postData = async(data, nickname, image) => { 
     const postdate = new Date();
     return new Promise((resolve, reject) => {
-        const query = "INSERT INTO clubboard (title, content, nickname, POST_DATE, UPDATE_DATE) values (?, ?, ?, ?, ?);"
+        const query = "INSERT INTO clubboard (title, content, nickname, POST_DATE, UPDATE_DATE, filename) values (?, ?, ?, ?, ?, ?);"
             const dbdata = [
                 data.title,
                 data.content,
                 nickname,
                 postdate,
                 postdate,
+                image
             ];
             db.query(query, dbdata, (err, result) => {
                 if (err) reject(`${err}`);

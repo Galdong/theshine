@@ -63,17 +63,19 @@ const output = {
 const process = {
     postWrite: async (req, res) => {
         const nickname = req.session.nickname;
+        const image = req.file.filename;
         const job = new Job(req.body);
-        const response = await job.post(nickname);
+        const response = await job.post(nickname, image);
         return res.json(response);
     },
     postEdit: async (req, res) => {
         const boardno = req.params.boardno;
+        const image = req.file.filename;
         if (isNaN(boardno)) {
             parseInt(boardno);
         } else {
             const updatedate = new Date();
-            const query = "UPDATE jobboard SET title=?, content=?, companyname=?, sector=?, businessinfo=?, startdate=?, employeenum=?, ceoname=?, UPDATE_DATE=? WHERE BOARD_NO=?;";
+            const query = "UPDATE jobboard SET title=?, content=?, companyname=?, sector=?, businessinfo=?, startdate=?, employeenum=?, ceoname=?, UPDATE_DATE=?, filename=? WHERE BOARD_NO=?;";
             const dbdata = [
                 req.body.title,
                 req.body.content,
@@ -84,6 +86,7 @@ const process = {
                 req.body.employeenum,
                 req.body.ceoname,
                 updatedate,
+                image,
                 boardno
             ];
             db.query(query, dbdata, (err, result) => {

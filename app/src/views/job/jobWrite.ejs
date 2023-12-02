@@ -22,15 +22,15 @@
     <p class="message">Error</p>
     <form class="form" enctype="multipart/form-data">
         <p>작성자: <%=nickname%></p>
-        <p><input id="title" type="text" placeholder="제목"/></p>
-        <p><input id="content" type="textarea" placeholder="내용을 입력해 주세요."/></p>
-        <!-- <p><input id="file" type="file" name="file"/></p> -->
-        <p><input id="companyname" type="text" placeholder="기업명"/></p>
-        <p><input id="sector" type="text" placeholder="업종"/></p>
-        <p><input id="businessinfo" type="text" placeholder="사업내용"/></p>
-        <p><input id="startdate" type="text" placeholder="설립일"/></p>
-        <p><input id="employeenum" type="text" placeholder="사원수"/></p>
-        <p><input id="ceoname" type="text" placeholder="대표자명"/></p>
+        <p><input id="title" name="title" type="text" placeholder="제목"/></p>
+        <p><input id="content" name="content" type="textarea" placeholder="내용을 입력해 주세요."/></p>
+        <p><input id="image" name="image" type="file"></p>
+        <p><input id="companyname" name="companyname" type="text" placeholder="기업명"/></p>
+        <p><input id="sector" name="sector" type="text" placeholder="업종"/></p>
+        <p><input id="businessinfo" name="businessinfo" type="text" placeholder="사업내용"/></p>
+        <p><input id="startdate" name="startdate" type="text" placeholder="설립일"/></p>
+        <p><input id="employeenum" name="employeenum" type="text" placeholder="사원수"/></p>
+        <p><input id="ceoname" name="ceoname" type="text" placeholder="대표자명"/></p>
         <p id="button" class="btn">글쓰기</p>
     </form>
     <script src="/js/job/jobwrite.js"></script>

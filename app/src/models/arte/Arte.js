@@ -7,10 +7,10 @@ class Arte {
         this.body = body;
     }
 
-    async post(nickname) {
+    async post(nickname, image) {
         const client = this.body;
         try {
-            const response = await ArteStorage.postData(client, nickname);
+            const response = await ArteStorage.postData(client, nickname, image);
             return response;
         } catch (err) {
             return { success: false, msg: `${err}` };

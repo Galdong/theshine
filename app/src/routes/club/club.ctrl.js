@@ -63,21 +63,24 @@ const output = {
 const process = {
     postWrite: async (req, res) => {
         const nickname = req.session.nickname;
+        const image = req.file.filename;
         const club = new Club(req.body);
-        const response = await club.post(nickname);
+        const response = await club.post(nickname, image);
         return res.json(response);
     },
     postEdit: async (req, res) => {
         const boardno = req.params.boardno;
+        const image = req.file.filename;
         if (isNaN(boardno)) {
             parseInt(boardno);
         } else {
             const updatedate = new Date();
-            const query = "UPDATE clubboard SET title=?, content=?, UPDATE_DATE=? WHERE BOARD_NO=?;";
+            const query = "UPDATE clubboard SET title=?, content=?, UPDATE_DATE=?, filename=? WHERE BOARD_NO=?;";
             const dbdata = [
                 req.body.title,
                 req.body.content,
                 updatedate,
+                image,
                 boardno
             ];
             db.query(query, dbdata, (err, result) => {

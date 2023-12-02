@@ -7,10 +7,10 @@ class Tech {
         this.body = body;
     }
 
-    async post(nickname) {
+    async post(nickname, image) {
         const client = this.body;
         try {
-            const response = await TechStorage.postData(client, nickname);
+            const response = await TechStorage.postData(client, nickname, image);
             return response;
         } catch (err) {
             return { success: false, msg: `${err}` };
