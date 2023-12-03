@@ -26,7 +26,11 @@
                 <td><%=data[i].nickname%></td>
                 <td><%=data[i].edu_period%></td>
                 <td><%=data[i].receipt_period%></td>
-                <td><%=data[i].POST_DATE%></td>
+                <td><% if (!data[i].UPDATE_DATE) { %>
+                        <%=data[i].POST_DATE%> 
+                    <% } else { %>
+                        <%=data[i].UPDATE_DATE%>(수정됨)
+                        <% } %></td>
                 <td><% if (data[i].status == 'ing') { %> 접수중 <% } else if (data[i].status == 'end') { %> 접수마감 <% } %></td>
             </tr>
             <% } %>

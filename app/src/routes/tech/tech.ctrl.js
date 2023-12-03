@@ -118,7 +118,7 @@ const process = {
         if (isNaN(boardno)) {
             parseInt(boardno);
         } else {
-            const updatedate = new Date();
+            const updatedate = new Date().toLocaleString();
             const query = "UPDATE techboard SET title=?, content=?, instructor_name=?, category=?, edu_period=?, recruit_num=?, receipt_period=?, location=?, status=?, UPDATE_DATE=?, filename=? WHERE BOARD_NO=?;";
             const dbdata = [
                 req.body.title,

@@ -1,9 +1,9 @@
 const db = require('../../config/db');
 
 exports.postData = async(data, nickname, image) => { 
-    const postdate = new Date();
+    const postdate = new Date().toLocaleString();
     return new Promise((resolve, reject) => {
-        const query = "INSERT INTO jobboard (title, content, companyname, sector, businessinfo, startdate, employeenum, ceoname, POST_DATE, UPDATE_DATE, nickname, filename) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+        const query = "INSERT INTO jobboard (title, content, companyname, sector, businessinfo, startdate, employeenum, ceoname, POST_DATE, nickname, filename) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
             const dbdata = [
                 data.title,
                 data.content,
@@ -13,7 +13,6 @@ exports.postData = async(data, nickname, image) => {
                 data.startdate,
                 data.employeenum,
                 data.ceoname,
-                postdate,
                 postdate,
                 nickname,
                 image
