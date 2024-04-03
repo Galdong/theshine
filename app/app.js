@@ -30,8 +30,8 @@ app.use(session(options));
 const home = require("./src/routes/home");
 const jobRouter = require("./src/routes/job/job");
 const clubRouter = require("./src/routes/club/club");
-const arteRouter = require("./src/routes/arte/arte");
-const techRouter = require("./src/routes/tech/tech");
+const artRouter = require("./src/routes/art/art");
+const proRouter = require("./src/routes/pro/pro");
 const adminRouter = require("./src/routes/admin/admin");
 
 app.set("views","./src/views");
@@ -46,8 +46,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/", home); // use -> 미들웨어 등록해주는 메소드
 app.use("/job", jobRouter); // job게시판 라우팅등록
 app.use("/club", clubRouter); // club게시판 라우팅등록
-app.use("/arte", arteRouter); //arte게시판 라우팅등록
-app.use("/tech", techRouter); // tech게시판 라우팅등록
+app.use("/art", artRouter); //art게시판 라우팅등록
+app.use("/pro", proRouter); // pro게시판 라우팅등록
 app.use("/admin", adminRouter); // 관리자게시판 라우팅등록
 
 module.exports = app; // bin/www.js 에 내보내주려고

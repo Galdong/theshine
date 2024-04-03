@@ -16,10 +16,10 @@ class Job {
             return { success: false, msg: `${err}` };
         }
     }
-    async edit(boardno) {
+    async edit(postID) {
         const client = this.body;
         try {
-            const response = await JobStorage.editData(client, boardno);
+            const response = await JobStorage.editData(client, postID, image);
             return response;
         } catch (err) {
             return { success: false, msg: `${err}` };

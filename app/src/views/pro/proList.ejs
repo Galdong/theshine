@@ -11,32 +11,38 @@
             <th>제목</th>
             <th>내용</th>
             <th>작성자</th>
+            <th>교육기간</th>
+            <th>접수기간</th>
             <th>작성일</th>
+            <th>상태</th>
         </tr>
         <% for (let i=(page*page_num) - page_num; i<(page*page_num); i++) { %>
             <% if (i > length) { %>
                 <% i++; %>
             <% } else { %>
             <tr>
-                <td><a href="/club/list/<%=page%>/<%=data[i].postID%>"><%=data[i].title%></a></td>
+                <td><a href="/pro/list/<%=page%>/<%=data[i].postID%>"><%=data[i].title%></a></td>
                 <td><%=data[i].content%></td>
                 <td><%=data[i].nickname%></td>
+                <td><%=data[i].eduPeriod%></td>
+                <td><%=data[i].receptionPeriod%></td>
                 <td><% if (!data[i].updateDate) { %>
                     <%=data[i].postDate%> 
                 <% } else { %>
                     <%=data[i].updateDate%>(수정됨)
                 <% } %></td>
+                <td><% if (data[i].status == 'ing') { %> 접수중 <% } else if (data[i].status == 'end') { %> 접수마감 <% } %></td>
             </tr>
             <% } %>
         <% } %>
         <tr>
-            <td colspan="5">
+            <td colspan="7">
                 <% for(let j=0; j<(length/page_num); j++) { %>
-                [<a href="/club/list/<%=j+1%>"><%=j+1%></a>]
+                [<a href="/pro/<%=category%>/<%=j+1%>"><%=j+1%></a>]
                 <% } %>
             </td>
         </tr>
     </table>
-    <a href="/club/write">글쓰기</a>
+    <a href="/pro/write">글쓰기</a>
 </body>
 </html>

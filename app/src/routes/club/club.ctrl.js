@@ -1,9 +1,11 @@
 const db = require('../../config/db');
 const Club = require("../../models/club/Club");
+const fs = require('fs');
+const path = require('path');
 
 const output = {
     getClub: (req, res) => {
-        const query = "SELECT * FROM clubboard ORDER BY BOARD_NO DESC";
+        const query = "SELECT * FROM clubboard ORDER BY postID DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
             if (result) res.render("club/clubList", {
@@ -13,10 +15,11 @@ const output = {
                 'page_num': 10,
             });
         });
+
     },
     getList: (req, res) => {
         const page = parseInt(req.params.page);
-        const query = "SELECT * FROM clubboard ORDER BY BOARD_NO DESC";
+        const query = "SELECT * FROM clubboard ORDER BY postID DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
             if (result) res.render("club/clubList", {
@@ -28,12 +31,12 @@ const output = {
         });
     },
     getView: (req, res) => {
-        const boardno = req.params.boardno;
-        if (isNaN(boardno)) {
-            parseInt(boardno);
+        const postID = req.params.postID;
+        if (isNaN(postID)) {
+            parseInt(postID);
         } else {
-            const query = "SELECT * FROM clubboard where BOARD_NO = ?";
-            db.query(query, [boardno], (err, result) => {
+            const query = "SELECT * FROM clubboard where postID = ?";
+            db.query(query, [postID], (err, result) => {
                 if (err) console.log(err);
                 if (result) res.render("club/clubView", {'data':result});
             });
@@ -44,10 +47,10 @@ const output = {
         res.render("club/clubWrite", {'nickname':nickname});
     },
     getEdit: (req, res) => {
-        const boardno = parseInt(req.params.boardno);
+        const postID = parseInt(req.params.postID);
         const nickname = req.session.nickname;
-        const query = "SELECT * FROM clubboard where BOARD_NO = ?";
-        db.query(query, [boardno], (err, result) => {
+        const query = "SELECT * FROM clubboard where postID = ?";
+        db.query(query, [postID], (err, result) => {
             if (err) console.log(err);
             if (result) {
                 if (result[0].nickname !== nickname) {
@@ -69,19 +72,20 @@ const process = {
         return res.json(response);
     },
     postEdit: async (req, res) => {
-        const boardno = req.params.boardno;
+        const postID = req.params.postID;
         const image = req.file.filename;
-        if (isNaN(boardno)) {
-            parseInt(boardno);
+        const data = req.body;
+        if (isNaN(postID)) {
+            parseInt(postID);
         } else {
-            const updatedate = new Date().toLocaleString();
-            const query = "UPDATE clubboard SET title=?, content=?, UPDATE_DATE=?, filename=? WHERE BOARD_NO=?;";
+            const updatedate = new Date();
+            const query = "UPDATE clubboard SET title=?, content=?, updateDate=?, filename=? WHERE postID=?;";
             const dbdata = [
-                req.body.title,
-                req.body.content,
+                data.title,
+                data.content,
                 updatedate,
                 image,
-                boardno
+                postID
             ];
             db.query(query, dbdata, (err, result) => {
                 if (err) console.log(err);
@@ -90,17 +94,25 @@ const process = {
         }
     },
     postDelete: (req, res) => {
-        const boardno = parseInt(req.params.boardno);
+        const postID = parseInt(req.params.postID);
         const nickname = req.session.nickname;
-        const query1 = "SELECT * FROM clubboard where BOARD_NO = ?";
-        db.query(query1, [boardno], (err, result) => {
+        const query1 = "SELECT * FROM clubboard where postID = ?";
+        db.query(query1, [postID], (err, result) => {
             if (err) console.log(err);
             if (result) {
                 if (result[0].nickname !== nickname) {
                     res.send("<script>alert('본인이 작성한 글만 삭제할 수 있습니다.');location.href=history.back();</script>");
                 } else {
-                    const query2 = "DELETE FROM clubboard WHERE BOARD_NO = ?;";
-                    db.query(query2, [boardno], (err, result) => {
+                    const filename = result[0].filename;
+                    const filepath = path.join(__dirname, "../../public/images/") + filename;
+                    fs.unlink(filepath, (err) => { 
+                        if (err) {
+                            console.error(err);
+                            return
+                        }
+                    });
+                    const query2 = "DELETE FROM clubboard WHERE postID = ?;";
+                    db.query(query2, [postID], (err, result) => {
                         if (err) return console.log(err);
                         if (result) res.json({success: true});
                     });

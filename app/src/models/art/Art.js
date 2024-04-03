@@ -1,8 +1,8 @@
 const db = require("../../config/db");
-const ClubStorage = require("./ClubStorage");
+const ArtStorage = require("./ArtStorage");
 
 
-class Club {
+class Art {
     constructor(body) {
         this.body = body;
     }
@@ -10,7 +10,7 @@ class Club {
     async post(nickname, image) {
         const client = this.body;
         try {
-            const response = await ClubStorage.postData(client, nickname, image);
+            const response = await ArtStorage.postData(client, nickname, image);
             return response;
         } catch (err) {
             return { success: false, msg: `${err}` };
@@ -19,7 +19,7 @@ class Club {
     async edit(postID) {
         const client = this.body;
         try {
-            const response = await ClubStorage.editData(client, postID, image);
+            const response = await ArtStorage.editData(client, postID);
             return response;
         } catch (err) {
             return { success: false, msg: `${err}` };
@@ -28,4 +28,4 @@ class Club {
     
 }
 
-module.exports = Club;
+module.exports = Art;

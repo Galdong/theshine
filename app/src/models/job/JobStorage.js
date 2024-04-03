@@ -1,18 +1,18 @@
 const db = require('../../config/db');
 
 exports.postData = async(data, nickname, image) => { 
-    const postdate = new Date().toLocaleString();
+    const postdate = new Date();
     return new Promise((resolve, reject) => {
-        const query = "INSERT INTO jobboard (title, content, companyname, sector, businessinfo, startdate, employeenum, ceoname, POST_DATE, nickname, filename) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+        const query = "INSERT INTO jobboard (title, content, companyName, industry, project, startDate, employeeNum, ceoName, postDate, nickname, filename) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
             const dbdata = [
                 data.title,
                 data.content,
-                data.companyname,
-                data.sector,
-                data.businessinfo,
-                data.startdate,
-                data.employeenum,
-                data.ceoname,
+                data.companyName,
+                data.industry,
+                data.project,
+                data.startDate,
+                data.employeeNum,
+                data.ceoName,
                 postdate,
                 nickname,
                 image
@@ -23,21 +23,22 @@ exports.postData = async(data, nickname, image) => {
             });        
     });
 }
-exports.editData = async(data, boardno) => {
-    const updatedate = new Date();
+exports.editData = async(data, postID, image) => {
+    const updateDate = new Date();
     return new Promise((resolve, reject) => {
-        const query = "UPDATE jobboard SET title=?, content=?, companyname=?, sector=?, businessinfo=?, startdate=?, employeenum=?, ceoname=?, UPDATE_DATE=? WHERE BOARD_NO=?;";
+        const query = "UPDATE jobboard SET title=?, content=?, companyName=?, industry=?, project=?, startDate=?, employeeNum=?, ceoName=?, updateDate=?, filename=? WHERE postID=?;";
             const dbdata = [
                 data.title,
                 data.content,
-                data.companyname,
-                data.sector,
-                data.businessinfo,
-                data.startdate,
-                data.employeenum,
-                data.ceoname,
-                updatedate,
-                boardno
+                data.companyName,
+                data.industry,
+                data.project,
+                data.startDate,
+                data.employeeNum,
+                data.ceoName,
+                updateDate,
+                image,
+                postID
             ];
             db.query(query, dbdata, (err, result) => {
                 if (err) reject(`${err}`);

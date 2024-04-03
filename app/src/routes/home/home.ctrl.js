@@ -1,5 +1,4 @@
 const UserStorage = require("../../models/home/UserStorage");
-const User = require("../../models/home/User");
 const auth = require("./auth");
 const crypto = require("./crypto");
 // const smtpTransport = require("../../config/email");
@@ -46,7 +45,7 @@ const process = {
                 if (user.id === client.id && password === user.password) {
                     req.session.is_logined = true;
                     req.session.nickname = user.nickname;
-                    req.session.auth = user.cat; // 사용자 유형에따라 권한부여
+                    req.session.auth = user.category; // 사용자 유형에따라 권한부여
                     req.session.save(function() {
                         return res.json({ success : true });
                     });
@@ -60,15 +59,29 @@ const process = {
 
     },
     registerc: async (req, res) => {
-        const user = new User(req.body);
-        const response = await user.registerc();
-        return res.json(response);
+        try {
+            const client = req.body;
+            const response = await UserStorage.savec(client);
+            return res.json(response);
+        } catch (err) {
+            return res.json({ success: false, msg: `${err}`});
+        }
     },
     registerp: async (req, res) => {
-        const user = new User(req.body);
-        const response = await user.registerp();
-        return res.json(response);
+        try {
+            const client = req.body;
+            const user = await UserStorage.getAuthcode(client.code);
+            if (user) {
+                const response = await UserStorage.savep(client);
+                return res.json(response);
+            }
+            else return res.json({ success: false, msg: "인증코드가 틀립니다." });
+        } catch (err) {
+            return res.json({ success: false, msg: `${err}`});
+        }
     },
+
+    
     // findpw: async (req, res) => {
     //     const query = "SELECT email FROM users WHERE id= ?;";
     //     db.query(query, req.body.id, (err, result) => {

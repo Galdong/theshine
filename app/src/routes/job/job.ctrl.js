@@ -1,9 +1,11 @@
 const db = require('../../config/db');
 const Job = require("../../models/job/Job");
+const fs = require('fs');
+const path = require('path');
 
 const output = {
     getJob: (req, res) => {
-        const query = "SELECT * FROM jobboard ORDER BY BOARD_NO DESC";
+        const query = "SELECT * FROM jobboard ORDER BY postID DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
             if (result) res.render("job/jobList", {
@@ -16,7 +18,7 @@ const output = {
     },
     getList: (req, res) => {
         const page = parseInt(req.params.page);
-        const query = "SELECT * FROM jobboard ORDER BY BOARD_NO DESC";
+        const query = "SELECT * FROM jobboard ORDER BY postID DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
             if (result) res.render("job/jobList", {
@@ -28,12 +30,12 @@ const output = {
         });
     },
     getView: (req, res) => {
-        const boardno = req.params.boardno;
-        if (isNaN(boardno)) {
-            parseInt(boardno);
+        const postID = req.params.postID;
+        if (isNaN(postID)) {
+            parseInt(postID);
         } else {
-            const query = "SELECT * FROM jobboard where BOARD_NO = ?";
-            db.query(query, [boardno], (err, result) => {
+            const query = "SELECT * FROM jobboard where postID = ?";
+            db.query(query, [postID], (err, result) => {
                 if (err) console.log(err);
                 if (result) res.render("job/jobView", {'data':result});
             });
@@ -44,10 +46,10 @@ const output = {
         res.render("job/jobWrite", {'nickname':nickname});
     },
     getEdit: (req, res) => {
-        const boardno = parseInt(req.params.boardno);
+        const postID = parseInt(req.params.postID);
         const nickname = req.session.nickname;
-        const query = "SELECT * FROM jobboard where BOARD_NO = ?";
-        db.query(query, [boardno], (err, result) => {
+        const query = "SELECT * FROM jobboard where postID = ?";
+        db.query(query, [postID], (err, result) => {
             if (err) console.log(err);
             if (result) {
                 if (result[0].nickname !== nickname) {
@@ -69,25 +71,26 @@ const process = {
         return res.json(response);
     },
     postEdit: async (req, res) => {
-        const boardno = req.params.boardno;
+        const postID = req.params.postID;
         const image = req.file.filename;
-        if (isNaN(boardno)) {
-            parseInt(boardno);
+        const data = req.body;
+        if (isNaN(postID)) {
+            parseInt(postID);
         } else {
-            const updatedate = new Date().toLocaleString();
-            const query = "UPDATE jobboard SET title=?, content=?, companyname=?, sector=?, businessinfo=?, startdate=?, employeenum=?, ceoname=?, UPDATE_DATE=?, filename=? WHERE BOARD_NO=?;";
+            const updatedate = new Date();
+            const query = "UPDATE jobboard SET title=?, content=?, companyName=?, industry=?, project=?, startDate=?, employeeNum=?, ceoName=?, updateDate=?, filename=? WHERE postID=?;";
             const dbdata = [
-                req.body.title,
-                req.body.content,
-                req.body.companyname,
-                req.body.sector,
-                req.body.businessinfo,
-                req.body.startdate,
-                req.body.employeenum,
-                req.body.ceoname,
+                data.title,
+                data.content,
+                data.companyName,
+                data.industry,
+                data.project,
+                data.startDate,
+                data.employeeNum,
+                data.ceoName,
                 updatedate,
                 image,
-                boardno
+                postID
             ];
             db.query(query, dbdata, (err, result) => {
                 if (err) console.log(err);
@@ -96,17 +99,25 @@ const process = {
         }
     },
     postDelete: (req, res) => {
-        const boardno = parseInt(req.params.boardno);
+        const postID = parseInt(req.params.postID);
         const nickname = req.session.nickname;
-        const query1 = "SELECT * FROM jobboard where BOARD_NO = ?";
-        db.query(query1, [boardno], (err, result) => {
+        const query1 = "SELECT * FROM jobboard where postID = ?";
+        db.query(query1, [postID], (err, result) => {
             if (err) console.log(err);
             if (result) {
                 if (result[0].nickname !== nickname) {
                     res.send("<script>alert('본인이 작성한 글만 삭제할 수 있습니다.');location.href=history.back();</script>");
                 } else {
-                    const query2 = "DELETE FROM jobboard WHERE BOARD_NO = ?;";
-                    db.query(query2, [boardno], (err, result) => {
+                    const filename = result[0].filename;
+                    const filepath = path.join(__dirname, "../../public/images/") + filename;
+                    fs.unlink(filepath, (err) => { 
+                        if (err) {
+                            console.error(err);
+                            return
+                        }
+                    });
+                    const query2 = "DELETE FROM jobboard WHERE postID = ?;";
+                    db.query(query2, [postID], (err, result) => {
                         if (err) return console.log(err);
                         if (result) res.json({success: true});
                     });

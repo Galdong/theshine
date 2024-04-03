@@ -22,16 +22,16 @@ exports.savec = async(userInfo) => { // 일반사용자 회원가입
         return { success: false, msg: '이미 존재하는 아이디입니다.'};
     }
     return new Promise((resolve, reject) => {
-        const query = "INSERT INTO users (id, name, password, address, mphone, cat, in_date, nickname, salt, email) VALUES(?, ?, ?, ?, ?, 'customer', ?, ?, ?, ?);";
+        const query = "INSERT INTO users (id, name, nickname, password, salt, address, mphone, category, joinDate, email) VALUES(?, ?, ?, ?, ?, ?, ?, 'user', ?, ?);";
         const dbdata = [
             userInfo.id, 
             userInfo.name, 
-            password, 
+            userInfo.nickname,
+            password,
+            salt,
             userInfo.address, 
             userInfo.mphone, 
             date, 
-            userInfo.nickname, 
-            salt,
             userInfo.email,
         ];
         db.query(query, dbdata, (err) => {
@@ -58,14 +58,16 @@ exports.savep = async (userInfo) => { // 공급자 회원가입
         return { success: false, msg: '이미 존재하는 아이디입니다.'};
     }
     return new Promise((resolve, reject) => {
-        const query1 = "INSERT INTO users (id, name, password, cat, in_date, nickname, salt, email) VALUES(?, ?, ?, 'provider', ?, ?, ?, ?);";
+        const query1 = "INSERT INTO users (id, name, nickname, password, salt, address, mphone, category, joinDate, email) VALUES(?, ?, ?, ?, ?, ?, ?, 'provider', ?, ?);";
         const dbdata = [
             userInfo.id, 
             userInfo.name, 
-            password, 
-            date, 
             userInfo.nickname, 
+            password, 
             salt,
+            userInfo.address, 
+            userInfo.mphone, 
+            date, 
             userInfo.email
         ];
         db.query(query1, dbdata, (err) => {
@@ -86,6 +88,16 @@ exports.savep = async (userInfo) => { // 공급자 회원가입
             else resolve({ success: true });
         });       
     });
+}
+
+exports.getSalt = async (id) => {
+    return new Promise((resolve, reject) => {
+        const query = "SELECT salt FROM users WHERE id = ?;";
+        db.query(query, [id], (err, data) => {
+            if (err) reject(err);
+            else resolve(data[0]);
+        });           
+    });  
 }
 
 exports.generateRandom = function(min, max) {

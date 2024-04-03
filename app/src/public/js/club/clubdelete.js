@@ -4,11 +4,11 @@ const deleteBtn = select('#dbutton');
 
 deleteBtn.addEventListener("click", deleteform);
 
-const boardno = window.location.href.split('/')[6];
+const postID = window.location.href.split('/')[6];
 
 function deleteform() {
     const req = {};
-    const url = `/club/delete/${boardno}`;
+    const url = `/club/delete/${postID}`;
     
     fetch(url, {
         method: "POST",
@@ -23,7 +23,7 @@ function deleteform() {
             location.href = "/club";
         } else {
             alert(res.msg);
-            location.href = "/club/:boardno";
+            location.href = "/club/:postID";
         }
     })
     .catch((err) => { // 예외처리

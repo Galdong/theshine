@@ -4,7 +4,7 @@
     "crypto": "^1.0.1",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
-    "express": "^4.18.2",
+    "express": "^4.19.2",
     "express-mysql-session": "^3.0.0",
     "express-session": "^1.17.3",
     "express-validator": "^7.0.1",
@@ -16,11 +16,11 @@
     "sharp": "^0.32.6",
     "uuid4": "^2.0.3"
   },
-  "name": "login_practice",
+  "name": "theshine",
   "version": "1.0.0",
   "main": "app.js",
   "bin": {
-    "login_practice": "bin/www.js"
+    "theshine": "bin/www.js"
   },
   "scripts": {
     "start": "nodemon ./bin/www.js",

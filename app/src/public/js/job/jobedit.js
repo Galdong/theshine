@@ -18,25 +18,24 @@ const validateForm = () => {
     const ftitle = select('#title').value.trim();
     const fcontent = select('#content').value.trim();
     const fimage = select('#image').value;
-    const fcompanyname = select('#companyname').value.trim();
-    const fsector = select('#sector').value.trim();
-    const fbusinessinfo = select('#businessinfo').value.trim();
-    const fstartdate = select('#startdate').value.trim();
-    const femployeenum = select('#employeenum').value.trim();
-    const fceoname = select('#ceoname').value.trim();
-
+    const fcompanyName = select('#companyName').value.trim();
+    const findustry = select('#industry').value.trim();
+    const fproject = select('#project').value.trim();
+    const fstartDate = select('#startDate').value.trim();
+    const femployeeNum = select('#employeeNum').value.trim();
+    const fceoName = select('#ceoName').value.trim();
     const exceptedImageFiles = ['jpg', 'jpeg', 'png'];
     const extension = fimage.split('.').pop();
 
     if (!ftitle) return displayMessage('제목을 입력해주세요.', 'red');
     if (!fcontent) return displayMessage('내용을 입력해주세요.', 'red');
     if (!exceptedImageFiles.includes(extension)) return displayMessage('이미지 파일만 가능합니다.', 'red');
-    if (!fcompanyname) return displayMessage('기업명을 입력해주세요.', 'red');
-    if (!fsector) return displayMessage('업종을 입력해주세요.', 'red');
-    if (!fbusinessinfo) return displayMessage('사업내용을 입력해주세요.', 'red');
-    if (!fstartdate) return displayMessage('설립일을 입력해주세요.', 'red');
-    if (!femployeenum) return displayMessage('사원수를 입력해주세요.', 'red');
-    if (!fceoname) return displayMessage('대표자명을 입력해주세요.', 'red');
+    if (!fcompanyName) return displayMessage('기업명을 입력해주세요.', 'red');
+    if (!findustry) return displayMessage('업종을 입력해주세요.', 'red');
+    if (!fproject) return displayMessage('사업내용을 입력해주세요.', 'red');
+    if (!fstartDate) return displayMessage('설립일을 입력해주세요.', 'red');
+    if (!femployeeNum) return displayMessage('사원수를 입력해주세요.', 'red');
+    if (!fceoName) return displayMessage('대표자명을 입력해주세요.', 'red');
 
     return true;
 }

@@ -19,14 +19,14 @@
                 <% i++; %>
             <% } else { %>
             <tr>
-                <td><a href="/job/list/<%=page%>/<%=data[i].BOARD_NO%>"><%=data[i].title%></a></td>
+                <td><a href="/job/list/<%=page%>/<%=data[i].postID%>"><%=data[i].title%></a></td>
                 <td><%=data[i].content%></td>
                 <td><%=data[i].nickname%></td>
-                <td><%=data[i].companyname%></td>
-                <td><% if (!data[i].UPDATE_DATE) { %>
-                    <%=data[i].POST_DATE%> 
+                <td><%=data[i].companyName%></td>
+                <td><% if (!data[i].updateDate) { %>
+                    <%=data[i].postDate%> 
                 <% } else { %>
-                    <%=data[i].UPDATE_DATE%>(수정됨)
+                    <%=data[i].updateDate%>(수정됨)
                 <% } %></td>
             </tr>
             <% } %>

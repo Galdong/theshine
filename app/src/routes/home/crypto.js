@@ -1,7 +1,7 @@
 // 비밀번호 해쉬하는 모듈 파일
 
 const crypto = require('crypto');
-const User = require("../../models/home/User");
+const UserStorage = require("../../models/home/UserStorage");
 
 const createSalt = () =>
     new Promise((resolve, reject) => {
@@ -22,8 +22,7 @@ const createHashedPassword = (plainPassword) =>
 
 const makePasswordHashed = (id, password) =>
     new Promise(async (resolve, reject) => {
-        const user = new User();
-        const salt = JSON.parse(JSON.stringify(await user.getSalt(id))).salt;
+        const salt = JSON.parse(JSON.stringify(await UserStorage.getSalt(id))).salt;
         crypto.pbkdf2(password, salt, 9999, 64, 'sha512', (err, key) => {
             if (err) reject(err);
             resolve(key.toString('base64'));

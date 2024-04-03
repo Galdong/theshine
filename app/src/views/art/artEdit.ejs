@@ -29,15 +29,26 @@
         <p><input id="title" name="title" type="text" placeholder="제목" value="<%=data[0].title%>"/></p>
         <p><input id="content" name="content" type="textarea" placeholder="내용을 입력해 주세요." value="<%=data[0].content%>"/></p>
         <p><input id="image" name="image" type="file"></p>
-        <p><input id="companyName" name="companyName" type="text" placeholder="기업명" value="<%=data[0].companyName%>"/></p>
-        <p><input id="industry" name="industry" type="text" placeholder="업종" value="<%=data[0].industry%>"/></p>
-        <p><input id="project" name="project" type="text" placeholder="사업내용" value="<%=data[0].project%>"/></p>
-        <p><input id="startDate" name="startDate" type="text" placeholder="설립일" value="<%=data[0].startDate%>"/></p>
-        <p><input id="employeeNum" name="employeeNum" type="text" placeholder="사원수" value="<%=data[0].employeeNum%>"/></p>
-        <p><input id="ceoName" name="ceoName" type="text" placeholder="대표자명" value="<%=data[0].ceoName%>"/></p>
+        <p><input id="instructorName" name="instructorName" type="text" placeholder="강사명" value="<%=data[0].instructorName%>"/></p>
+        <p><select id="category" name="category">
+            <option value="0">카테고리</option>
+            <option value="humanities" <% if (data[0].category == 'humanities') { %> selected <% } %>>인문학</option>
+            <option value="music" <% if (data[0].category == 'music') { %> selected <% } %>>음악</option>
+            <option value="art" <% if (data[0].category == 'art') { %> selected <% } %>>미술</option>
+            <option value="sports" <% if (data[0].category == 'sports') { %> selected <% } %>>운동</option>
+            <option value="show" <% if (data[0].category == 'show') { %> selected <% } %>>공연</option>
+        </select></p>
+        <p><input id="eduPeriod" name="eduPeriod" type="text" placeholder="교육기간" value="<%=data[0].eduPeriod%>"/></p>
+        <p><input id="recruitNum" name="recruitNum" type="text" placeholder="모집인원" value="<%=data[0].recruitNum%>"/></p>
+        <p><input id="receptionPeriod" name="receptionPeriod" type="text" placeholder="접수기간" value="<%=data[0].receptionPeriod%>"/></p>
+        <p><input id="place" name="place" type="text" placeholder="장소" value="<%=data[0].place%>"/></p>
+        <p><select id="status" name="status">
+            <option value="ing" <% if (data[0].status == 'ing') { %> selected <% } %>>접수중</option>
+            <option value="end" <% if (data[0].status == 'end') { %> selected <% } %>>접수마감</option>
+        </select></p>
         <p id="button" class="btn">수정하기</p>
     </form>
-    <script src="/js/job/jobedit.js"></script>
+    <script src="/js/art/artedit.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 </html>
