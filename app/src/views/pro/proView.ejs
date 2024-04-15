@@ -13,7 +13,11 @@
     제목 : <%=data[0].title%> <br>
     작성자: <%=data[0].nickname%> <br>
     내용 : <%=data[0].content%> <br>
-    <img src="/images/<%=data[0].filename%>"><br>
+    <div class="image-preview">
+        <% for (let i=0; i < imageNum; i++) { %>
+            <img src="/images/<%=image[i]%>">
+        <% } %>
+    </div>
     강사이름 : <%=data[0].instructorName%> <br>
     카테고리 : <%=data[0].category%> <br>
     교육기간 : <%=data[0].eduPeriod%> <br>
@@ -25,5 +29,6 @@
     <p id="dbutton" class="btn">삭제</p>
     <p id="abutton" class="btn">신청하기</p>
     <script src="/js/pro/proapply.js"></script>
+    <script src="/js/pro/prowrite.js"></script>
 </body>
 </html>

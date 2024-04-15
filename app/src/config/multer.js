@@ -5,6 +5,7 @@ const path = require("path");
 const upload = multer({
     storage: multer.diskStorage({
         filename(req, file, done) {
+            file.originalname = Buffer.from(file.originalname, "latin1").toString("utf8"); // 원본파일명 한글깨짐 해결
             const randomID = uuid4();
             const ext = path.extname(file.originalname); // path모듈을 통해 확장자 추출
             const filename = randomID + ext;

@@ -28,6 +28,15 @@
         <p><input id="title" name="title" type="text" placeholder="제목" value="<%=data[0].title%>"/></p>
         <p><input id="content" name="content" type="textarea" placeholder="내용을 입력해 주세요." value="<%=data[0].content%>"/></p>
         <p><input id="image" name="image" type="file"></p>
+            선택된 파일<br>
+            <% if (imageOriginalName) { %>
+                <ul>
+                    <% for (let i=0; i < imageOriginalName.length; i++) { %>
+                        <li class="imageOriginalName"><%=imageOriginalName[i]%><button>삭제</button></li>
+                    <% } %>
+                </ul>
+            <% } %>
+            
         <p><input id="instructorName" name="instructorName" type="text" placeholder="강사명" value="<%=data[0].instructorName%>"/></p>
         <p><select id="category" name="category">
             <option value="0">카테고리</option>

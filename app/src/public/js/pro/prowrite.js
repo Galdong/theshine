@@ -24,12 +24,8 @@ const validateForm = () => {
     const freceptionPeriod = select('#receptionPeriod').value.trim();
     const fplace = select('#place').value.trim();
 
-    const exceptedImageFiles = ['jpg', 'jpeg', 'png'];
-    const extension = fimage.split('.').pop();
-
     if (!ftitle) return displayMessage('제목을 입력해주세요.', 'red');
     if (!fcontent) return displayMessage('내용을 입력해주세요.', 'red');
-    if (!exceptedImageFiles.includes(extension)) return displayMessage('이미지 파일만 가능합니다.', 'red');
     if (!finstructorName) return displayMessage('강사명을 입력해주세요.', 'red');
     if (fcategory == '0') return displayMessage('카테고리를 선택해주세요.', 'red');
     if (!feduPeriod) return displayMessage('교육기간을 입력해주세요.', 'red');
@@ -38,6 +34,60 @@ const validateForm = () => {
     if (!fplace) return displayMessage('장소를 입력해주세요.', 'red');
 
     return true;
+}
+
+if(select('#image')) {
+    let uploadNum = 0;
+    let index = 0;
+    select('#image').addEventListener("change", function (e) {
+        const formData = new FormData();
+        const length = this.files.length;
+        const max = 5; // 사진 최대 5장 업로드가능
+        switch (uploadNum) {
+            case 0:
+                if (length > max - uploadNum) {
+                    alert("사진은 최대 5장까지만 가능합니다.");
+                    return;
+                  }
+                  uploadNum += length;
+                  break;
+            case 1:
+                if (length > max - uploadNum) {
+                    alert("사진은 최대 5장까지만 가능합니다.");
+                    return;
+                  }
+                  uploadNum += length;
+                  break;
+            case 2:
+                if (length > max - uploadNum) {
+                    alert("사진은 최대 5장까지만 가능합니다.");
+                    return;
+                    }
+                    uploadNum += length;
+                    break;
+            case 3:
+                if (length > max - uploadNum) {
+                    alert("사진은 최대 5장까지만 가능합니다.");
+                    return;
+                    }
+                    uploadNum += length;
+                    break;
+            case 4:
+                if (length > max - uploadNum) {
+                    alert("사진은 최대 5장까지만 가능합니다.");
+                    return;
+                    }
+                    uploadNum += length;
+                    break;
+            default:
+                alert("사진은 최대 5장까지만 가능합니다.");
+                return; 
+        }
+        for (let i = 0; i < length; i++) {
+            formData.append("image", this.files[i]);
+            index++;
+        }
+    });
 }
 
 registerBtn.addEventListener("click", () => {
