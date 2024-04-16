@@ -15,7 +15,7 @@ router.get("/:category/:page", ctrl.output.getCatpage);
 router.get("/:postID", ctrl.output.getView2); // 관리자 페이지에서 게시글로 이동하기 위해 따로 구현
 
 router.post("/write", upload.array('image', 5), ctrl.process.postWrite);
-router.post("/edit/:postID", upload.single('image'), ctrl.process.postEdit);
+router.post("/edit/:postID", upload.array('image', 5), ctrl.process.postEdit);
 router.post("/delete/:postID", ctrl.isLogined, ctrl.process.postDelete);
 router.post("/apply/:postID", ctrl.isLogined, ctrl.process.postApply);
 

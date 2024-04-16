@@ -135,16 +135,14 @@ const process = {
     postEdit: async (req, res) => {
         const postID = req.params.postID;
         if (req.files) {
-            let images =[];
-            let imagesOriginalName = [];
+            var images =[];
+            var imagesOriginalName = [];
             for (var i=0; i < req.files.length; i++) {
                 images.push(req.files[i].filename);
             }
             for (var j=0; j < req.files.length; j++) {
                 imagesOriginalName.push(req.files[j].originalname);
             }
-            const image = JSON.stringify(images);
-            const imageOriginalName = JSON.stringify(imagesOriginalName);
         }
         const data = req.body;
         if (isNaN(postID)) {
@@ -155,20 +153,20 @@ const process = {
                 if (err) console.log(err);
                 if (result) {
                     if (data.deletedImage) {
+                        let filename1 = JSON.parse(result[0].filename);
+                        let fileOriginalName1 = JSON.parse(result[0].fileOriginalName);
                         let deletedFile = data.deletedImage;
                         if (!Array.isArray(deletedFile)) {
                             deletedFile = deletedFile.split();
                         }
-                        let filename = JSON.parse(result[0].filename);
-                        let fileOriginalName = JSON.parse(result[0].fileOriginalName);
                         const filepath = path.join(__dirname, "../../public/images/");
 
-                        const filesToDelete = fileOriginalName.filter(name => deletedFile.includes(name));
+                        const filesToDelete = fileOriginalName1.filter(name => deletedFile.includes(name));
                         
                         filesToDelete.forEach(name => {
-                            const index = fileOriginalName.indexOf(name);
+                            const index = fileOriginalName1.indexOf(name);
                             if (index !== -1) {
-                                const fullFilepath = path.join(filepath, filename[index]);
+                                const fullFilepath = path.join(filepath, filename1[index]);
                                 fs.unlink(fullFilepath, (err) => {
                                     if (err) {
                                         console.error('file');
@@ -178,38 +176,52 @@ const process = {
                             }
                         });
 
-                        filename = filename.filter((_, index) => !filesToDelete.includes(fileOriginalName[index]));
-                        fileOriginalName = fileOriginalName.filter(name => !deletedFile.includes(name));
+                        filename1 = filename1.filter((_, index) => !filesToDelete.includes(fileOriginalName1[index]));
+                        fileOriginalName1 = fileOriginalName1.filter(name => !deletedFile.includes(name));
                         if (req.files) {
-                            var newFilename = JSON.stringify(filename.push(...image));
-                            var newFileOriginalName = JSON.stringify(fileOriginalName.push(...imageOriginalName));
+                            filename1.push(...images);
+                            fileOriginalName1.push(...imagesOriginalName);
+                            var newFilename = JSON.stringify(filename1);
+                            var newFileOriginalName = JSON.stringify(fileOriginalName1);
                         } else {
-                            var newFilename = JSON.stringify(filename);
-                            var newFileOriginalName = JSON.stringify(fileOriginalName);
+                            var newFilename = JSON.stringify(filename1);
+                            var newFileOriginalName = JSON.stringify(fileOriginalName1);
                         }
-                        const updatedate = new Date();
-                        const query2 = "UPDATE ProfessionalEdu SET title=?, content=?, instructorName=?, category=?, eduPeriod=?, recruitNum=?, receptionPeriod=?, place=?, status=?, updateDate=?, filename=?, fileOriginalName=? WHERE postID=?;";
-                        const dbdata = [
-                            data.title,
-                            data.content,
-                            data.instructorName,
-                            data.category,
-                            data.eduPeriod,
-                            data.recruitNum,
-                            data.receptionPeriod,
-                            data.place,
-                            data.status,
-                            updatedate,
-                            newFilename,
-                            newFileOriginalName,
-                            postID,
-                        ];
-                        db.query(query2, dbdata, (err, result) => {
-                            if (err) console.log(err);
-                            if (result) res.json({success: true});
-                        }); 
-                    }   
-                }; 
+                    } else {
+                        let filename2 = JSON.parse(result[0].filename);
+                        let fileOriginalName2 = JSON.parse(result[0].fileOriginalName);
+                        if (req.files) {
+                            filename2.push(...images);
+                            fileOriginalName2.push(...imagesOriginalName);
+                            var newFilename = JSON.stringify(filename2); 
+                            var newFileOriginalName = JSON.stringify(fileOriginalName2);
+                        } else {
+                            var newFilename = JSON.stringify(filename2);
+                            var newFileOriginalName = JSON.stringify(fileOriginalName2);
+                        }
+                    }
+                    const updatedate = new Date();
+                    const query2 = "UPDATE ProfessionalEdu SET title=?, content=?, instructorName=?, category=?, eduPeriod=?, recruitNum=?, receptionPeriod=?, place=?, status=?, updateDate=?, filename=?, fileOriginalName=? WHERE postID=?;";
+                    const dbdata = [
+                        data.title,
+                        data.content,
+                        data.instructorName,
+                        data.category,
+                        data.eduPeriod,
+                        data.recruitNum,
+                        data.receptionPeriod,
+                        data.place,
+                        data.status,
+                        updatedate,
+                        newFilename,
+                        newFileOriginalName,
+                        postID,
+                    ];
+                    db.query(query2, dbdata, (err, result) => {
+                        if (err) console.log(err);
+                        if (result) res.json({success: true});
+                    }); 
+                }   
             });
         }
     },
