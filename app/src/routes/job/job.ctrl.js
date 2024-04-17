@@ -37,7 +37,11 @@ const output = {
             const query = "SELECT * FROM jobboard where postID = ?";
             db.query(query, [postID], (err, result) => {
                 if (err) console.log(err);
-                if (result) res.render("job/jobView", {'data':result});
+                if (result) res.render("job/jobView", {
+                    'data':result,
+                    'imageNum':JSON.parse(result[0].filename).length,
+                    'image':JSON.parse(result[0].filename)
+                });
             });
         }   
     },
@@ -55,7 +59,12 @@ const output = {
                 if (result[0].nickname !== nickname) {
                     res.send("<script>alert('본인이 작성한 글만 수정할 수 있습니다.');location.href=history.back();</script>");
                 } else {
-                    res.render("job/jobEdit", {'data':result, 'nickname':nickname});
+                    res.render("job/jobEdit", {
+                        'data':result, 
+                        'nickname':nickname,
+                        'imageNum':JSON.parse(result[0].fileOriginalName),
+                        'imageOriginalName':JSON.parse(result[0].fileOriginalName)
+                    });
                 }
             }
         });    
@@ -65,37 +74,110 @@ const output = {
 const process = {
     postWrite: async (req, res) => {
         const nickname = req.session.nickname;
-        const image = req.file.filename;
+        let images = [];
+        for (var i=0; i < req.files.length; i++) {
+            images.push(req.files[i].filename);
+        }
+        const image = JSON.stringify(images);
+        let imagesOriginalName = [];
+        for (var i=0; i < req.files.length; i++) {
+            imagesOriginalName.push(req.files[i].originalname);
+        }
+        const imageOriginalName = JSON.stringify(imagesOriginalName);
         const job = new Job(req.body);
-        const response = await job.post(nickname, image);
+        const response = await job.post(nickname, image, imageOriginalName);
         return res.json(response);
     },
     postEdit: async (req, res) => {
         const postID = req.params.postID;
-        const image = req.file.filename;
+        if (req.files) {
+            var images =[];
+            var imagesOriginalName = [];
+            for (var i=0; i < req.files.length; i++) {
+                images.push(req.files[i].filename);
+            }
+            for (var j=0; j < req.files.length; j++) {
+                imagesOriginalName.push(req.files[j].originalname);
+            }
+        }
         const data = req.body;
         if (isNaN(postID)) {
             parseInt(postID);
         } else {
-            const updatedate = new Date();
-            const query = "UPDATE jobboard SET title=?, content=?, companyName=?, industry=?, project=?, startDate=?, employeeNum=?, ceoName=?, updateDate=?, filename=? WHERE postID=?;";
-            const dbdata = [
-                data.title,
-                data.content,
-                data.companyName,
-                data.industry,
-                data.project,
-                data.startDate,
-                data.employeeNum,
-                data.ceoName,
-                updatedate,
-                image,
-                postID
-            ];
-            db.query(query, dbdata, (err, result) => {
+            const query1 = "SELECT * FROM jobboard WHERE postID = ?";
+            db.query(query1, postID, (err, result) => {
                 if (err) console.log(err);
-                if (result) res.json({success: true});
-            });
+                if (result) {
+                    if (data.deletedImage) {
+                        let filename1 = JSON.parse(result[0].filename);
+                        let fileOriginalName1 = JSON.parse(result[0].fileOriginalName);
+                        let deletedFile = data.deletedImage;
+                        if (!Array.isArray(deletedFile)) {
+                            deletedFile = deletedFile.split();
+                        }
+                        const filepath = path.join(__dirname, "../../public/images/");
+
+                        const filesToDelete = fileOriginalName1.filter(name => deletedFile.includes(name));
+                        
+                        filesToDelete.forEach(name => {
+                            const index = fileOriginalName1.indexOf(name);
+                            if (index !== -1) {
+                                const fullFilepath = path.join(filepath, filename1[index]);
+                                fs.unlink(fullFilepath, (err) => {
+                                    if (err) {
+                                        console.error('file');
+                                        return;
+                                    }
+                                });
+                            }
+                        });
+
+                        filename1 = filename1.filter((_, index) => !filesToDelete.includes(fileOriginalName1[index]));
+                        fileOriginalName1 = fileOriginalName1.filter(name => !deletedFile.includes(name));
+                        if (req.files) {
+                            filename1.push(...images);
+                            fileOriginalName1.push(...imagesOriginalName);
+                            var newFilename = JSON.stringify(filename1);
+                            var newFileOriginalName = JSON.stringify(fileOriginalName1);
+                        } else {
+                            var newFilename = JSON.stringify(filename1);
+                            var newFileOriginalName = JSON.stringify(fileOriginalName1);
+                        }
+                    } else {
+                        let filename2 = JSON.parse(result[0].filename);
+                        let fileOriginalName2 = JSON.parse(result[0].fileOriginalName);
+                        if (req.files) {
+                            filename2.push(...images);
+                            fileOriginalName2.push(...imagesOriginalName);
+                            var newFilename = JSON.stringify(filename2); 
+                            var newFileOriginalName = JSON.stringify(fileOriginalName2);
+                        } else {
+                            var newFilename = JSON.stringify(filename2);
+                            var newFileOriginalName = JSON.stringify(fileOriginalName2);
+                        }
+                    }
+                    const updatedate = new Date();
+                    const query2 = "UPDATE jobboard SET title=?, content=?, companyName=?, industry=?, project=?, startDate=?, employeeNum=?, ceoName=?, updateDate=?, filename=?, fileOriginalName=? WHERE postID=?;";
+                    const dbdata = [
+                        data.title,
+                        data.content,
+                        data.companyName,
+                        data.industry,
+                        data.project,
+                        data.startDate,
+                        data.employeeNum,
+                        data.ceoName,
+                        updatedate,
+                        newFilename,
+                        newFileOriginalName,
+                        postID
+                    ];
+                    db.query(query2, dbdata, (err, result) => {
+                        if (err) console.log(err);
+                        if (result) res.json({success: true});
+                    });
+                }
+            });  
         }
     },
     postDelete: (req, res) => {

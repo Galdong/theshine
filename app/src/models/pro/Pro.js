@@ -16,16 +16,6 @@ class Pro {
             return { success: false, msg: `${err}` };
         }
     }
-    async edit(postID) {
-        const client = this.body;
-        try {
-            const response = await ProStorage.editData(client, postID);
-            return response;
-        } catch (err) {
-            return { success: false, msg: `${err}` };
-        }
-    }
-    
 }
 
 module.exports = Pro;

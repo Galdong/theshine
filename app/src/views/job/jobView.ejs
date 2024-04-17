@@ -13,7 +13,11 @@
     제목 : <%=data[0].title%> <br>
     작성자: <%=data[0].nickname%> <br>
     내용 : <%=data[0].content%> <br>
-    <img src="/images/<%=data[0].filename%>"><br>
+    <div class="image-preview">
+        <% for (let i=0; i < imageNum; i++) { %>
+            <img src="/images/<%=image[i]%>">
+        <% } %>
+    </div>
     기업명 : <%=data[0].companyName%> <br>
     업종 : <%=data[0].industry%> <br>
     사업내용 : <%=data[0].project%> <br>

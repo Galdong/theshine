@@ -28,7 +28,15 @@
         <p id="postID" class="hidden"><%=data[0].postID%></p>
         <p><input id="title" name="title" type="text" placeholder="제목" value="<%=data[0].title%>"/></p>
         <p><input id="content" name="content" type="textarea" placeholder="내용을 입력해 주세요." value="<%=data[0].content%>"/></p>
-        <p><input id="image" name="image" type="file"></p>
+        <p><input id="image" name="image" type="file" multiple></p>
+        선택된 파일<br>
+            <% if (imageOriginalName) { %>
+                <ul>
+                    <% for (let i=0; i < imageOriginalName.length; i++) { %>
+                        <li class="imageOriginalName"><%=imageOriginalName[i]%><button>삭제</button></li>
+                    <% } %>
+                </ul>
+            <% } %>
         <p><input id="companyName" name="companyName" type="text" placeholder="기업명" value="<%=data[0].companyName%>"/></p>
         <p><input id="industry" name="industry" type="text" placeholder="업종" value="<%=data[0].industry%>"/></p>
         <p><input id="project" name="project" type="text" placeholder="사업내용" value="<%=data[0].project%>"/></p>

@@ -16,7 +16,6 @@ const displayMessage = (text, color) => {
 const validateForm = () => {
     const ftitle = select('#title').value.trim();
     const fcontent = select('#content').value.trim();
-    const fimage = select('#image').value;
     const finstructorName = select('#instructorName').value.trim();
     const fcategory = select('#category').value.trim();
     const feduPeriod = select('#eduPeriod').value.trim();
