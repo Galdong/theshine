@@ -190,14 +190,18 @@ const process = {
                 if (result[0].nickname !== nickname) {
                     res.send("<script>alert('본인이 작성한 글만 삭제할 수 있습니다.');location.href=history.back();</script>");
                 } else {
-                    const filename = result[0].filename;
-                    const filepath = path.join(__dirname, "../../public/images/") + filename;
-                    fs.unlink(filepath, (err) => { 
-                        if (err) {
-                            console.error(err);
-                            return
-                        }
-                    });
+                    const filename = JSON.parse(result[0].filename);
+                    const fileNum = filename.length;
+                    const filepath = path.join(__dirname, "../../public/images/");
+                    for (i=0; i<fileNum; i++) {
+                        const fullFilepath = path.join(filepath, filename[i]);
+                        fs.unlink(fullFilepath, (err) => {
+                            if (err) {
+                                console.error(err);
+                                return
+                            }
+                        });
+                    }
                     const query2 = "DELETE FROM jobboard WHERE postID = ?;";
                     db.query(query2, [postID], (err, result) => {
                         if (err) return console.log(err);
