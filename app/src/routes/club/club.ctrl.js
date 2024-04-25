@@ -38,13 +38,24 @@ const output = {
             const query = "SELECT * FROM clubboard where postID = ?";
             db.query(query, [postID], (err, result) => {
                 if (err) console.log(err);
-                if (result) res.render("club/clubView", {
-                    'data':result,
-                    'imageNum':JSON.parse(result[0].filename).length,
-                    'image':JSON.parse(result[0].filename)
-                });
+                if (result) {
+                    let data = {
+                        'data':result,
+                        'imageNum':JSON.parse(result[0].filename).length,
+                        'image':JSON.parse(result[0].filename)
+                    };
+                    const query2 = "SELECT * FROM clubboardComment where postID = ?";
+                    db.query(query2, [postID], (err, result2) => {
+                        if (err) console.log(err);
+                        if (result2) {
+                            data.comment = result2,
+                            data.commentNum = result2.length
+                            res.render("club/clubView", data);
+                        }
+                    });
+                }
             });
-        }   
+        };     
     },
     getWrite: (req, res) => {
         const nickname = req.session.nickname;
@@ -183,7 +194,7 @@ const process = {
             if (err) console.log(err);
             if (result) {
                 if (result[0].nickname !== nickname) {
-                    res.send("<script>alert('본인이 작성한 글만 삭제할 수 있습니다.');location.href=history.back();</script>");
+                    res.json({ success: false, msg: "본인이 작성한 글만 삭제할 수 있습니다." });
                 } else {
                     const filename = JSON.parse(result[0].filename);
                     const fileNum = filename.length;
@@ -205,6 +216,45 @@ const process = {
                 }
             }
         }); 
+    },
+    commentWrite: (req, res) => {
+        const postID = parseInt(req.params.postID);
+        const nickname = req.session.nickname;
+        const content = req.body.content;
+        const postdate = new Date();
+        const query = "INSERT INTO clubboardComment (postID, nickname, content, postDate) values (?, ?, ?, ?);";
+        const dbdata = [
+            postID,
+            nickname,
+            content,
+            postdate
+        ];
+        db.query(query, dbdata, (err, result) => {
+            if (err) console.log(err);
+            if (result) res.json({success: true});
+        });
+    },
+    commentEdit: (req, res) => {
+
+    },
+    commentDelete: (req, res) => {
+        const commentID = parseInt(req.params.commentID);
+        const nickname = req.session.nickname;
+        const query1 = "SELECT * FROM clubboardComment WHERE commentID=?";
+        db.query(query1, [commentID], (err, result) => {
+            if (err) console.log(err);
+            if (result) {
+                if (result[0].nickname !== nickname) {
+                    res.json({ success: false, msg: "본인이 작성한 글만 삭제할 수 있습니다." });
+                } else {
+                    const query2 = "DELETE FROM clubboardComment WHERE commentID=?";
+                    db.query(query2, [commentID], (err, result) => {
+                        if (err) return console.log(err);
+                        if (result) res.json({success: true});
+                    });
+                }
+            }
+        });
     },
 }
 

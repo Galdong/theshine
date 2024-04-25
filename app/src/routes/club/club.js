@@ -13,4 +13,7 @@ router.get("/edit/:postID", ctrl.isLogined, ctrl.output.getEdit);
 router.post("/write", upload.array('image', 5), ctrl.process.postWrite);
 router.post("/edit/:postID", upload.array('image', 5), ctrl.process.postEdit);
 router.post("/delete/:postID", ctrl.process.postDelete);
+router.post("/comment/:postID", ctrl.isLogined, ctrl.process.commentWrite);
+// router.post("/comment/:postID/edit/:commentID", ctrl.isLogined, ctrl.process.commentEdit);
+router.post("/comment/:postID/delete/:commentID", ctrl.isLogined, ctrl.process.commentDelete);
 module.exports = router;

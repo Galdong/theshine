@@ -14,12 +14,26 @@
     작성자: <%=data[0].nickname%> <br>
     내용 : <%=data[0].content%> <br>
     <div class="image-preview">
-        <% for (let i=0; i < imageNum; i++) { %>
+        <% for (i=0; i < imageNum; i++) { %>
             <img src="/images/<%=image[i]%>">
         <% } %>
     </div>
     <a href="/club/edit/<%=data[0].postID%>">수정</a>
     <p id="dbutton" class="btn">삭제</p>
     <script src="/js/club/clubdelete.js"></script>
+    <form class="form">
+        <p><input id="content" name="content" type="textarea" placeholder="댓글 내용을 입력해주세요."></p>
+        <p id="button" class="btn">등록</p>
+    </form>
+    댓글(<%=commentNum%>)
+    <% for (j=0; j < commentNum; j++) { %>
+    <ul>
+        <li>작성자: <%=comment[j].nickname%></li>
+        <li>내용: <%=comment[j].content%></li>
+        <a href="/club/edit/<%=data[0].postID%>/edit/<%=comment[j].commentID%>">수정</a>
+        <button class="btn cdbutton" data-commentID="<%=comment[j].commentID%>">삭제</button>
+    </ul>
+    <% } %>
+    <script src="/js/club/clubcomment.js"></script>
 </body>
 </html>

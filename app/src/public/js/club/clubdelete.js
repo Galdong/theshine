@@ -23,7 +23,6 @@ function deleteform() {
             location.href = "/club";
         } else {
             alert(res.msg);
-            location.href = "/club/:postID";
         }
     })
     .catch((err) => { // 예외처리
