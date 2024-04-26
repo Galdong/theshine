@@ -1,14 +1,14 @@
 const db = require('../../config/db');
-const Club = require("../../models/club/Club");
+const Free = require("../../models/free/Free");
 const fs = require('fs');
 const path = require('path');
 
 const output = {
-    getClub: (req, res) => {
-        const query = "SELECT * FROM clubboard ORDER BY postID DESC";
+    getFree: (req, res) => {
+        const query = "SELECT * FROM freeboard ORDER BY postID DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("club/clubList", {
+            if (result) res.render("free/freeList", {
                 'data':result,
                 'length':result.length - 1,
                 'page': 1,
@@ -19,10 +19,10 @@ const output = {
     },
     getList: (req, res) => {
         const page = parseInt(req.params.page);
-        const query = "SELECT * FROM clubboard ORDER BY postID DESC";
+        const query = "SELECT * FROM freeboard ORDER BY postID DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("club/clubList", {
+            if (result) res.render("free/freeList", {
                 'data':result,
                 'length':result.length - 1,
                 'page': page,
@@ -35,7 +35,7 @@ const output = {
         if (isNaN(postID)) {
             parseInt(postID);
         } else {
-            const query = "SELECT * FROM clubboard where postID = ?";
+            const query = "SELECT * FROM freeboard where postID = ?";
             db.query(query, [postID], (err, result) => {
                 if (err) console.log(err);
                 if (result) {
@@ -44,13 +44,13 @@ const output = {
                         'imageNum':JSON.parse(result[0].filename).length,
                         'image':JSON.parse(result[0].filename)
                     };
-                    const query2 = "SELECT * FROM clubboardComment where postID = ?";
+                    const query2 = "SELECT * FROM freeboardComment where postID = ?";
                     db.query(query2, [postID], (err, result2) => {
                         if (err) console.log(err);
                         if (result2) {
                             data.comment = result2,
                             data.commentNum = result2.length
-                            res.render("club/clubView", data);
+                            res.render("free/freeView", data);
                         }
                     });
                 }
@@ -59,19 +59,19 @@ const output = {
     },
     getWrite: (req, res) => {
         const nickname = req.session.nickname;
-        res.render("club/clubWrite", {'nickname':nickname});
+        res.render("free/freeWrite", {'nickname':nickname});
     },
     getEdit: (req, res) => {
         const postID = parseInt(req.params.postID);
         const nickname = req.session.nickname;
-        const query = "SELECT * FROM clubboard where postID = ?";
+        const query = "SELECT * FROM freeboard where postID = ?";
         db.query(query, [postID], (err, result) => {
             if (err) console.log(err);
             if (result) {
                 if (result[0].nickname !== nickname) {
                     res.send("<script>alert('본인이 작성한 글만 수정할 수 있습니다.');location.href=history.back();</script>");
                 } else {
-                    res.render("club/clubEdit", {
+                    res.render("free/freeEdit", {
                         'data':result, 
                         'nickname':nickname,
                         'imageNum':JSON.parse(result[0].fileOriginalName),
@@ -96,8 +96,8 @@ const process = {
             imagesOriginalName.push(req.files[i].originalname);
         }
         const imageOriginalName = JSON.stringify(imagesOriginalName);
-        const club = new Club(req.body);
-        const response = await club.post(nickname, image, imageOriginalName);
+        const free = new Free(req.body);
+        const response = await free.post(nickname, image, imageOriginalName);
         return res.json(response);
     },
     postEdit: async (req, res) => {
@@ -116,7 +116,7 @@ const process = {
         if (isNaN(postID)) {
             parseInt(postID);
         } else {
-            const query1 = "SELECT * FROM clubboard WHERE postID = ?";
+            const query1 = "SELECT * FROM freeboard WHERE postID = ?";
             db.query(query1, postID, (err, result) => {
                 if (err) console.log(err);
                 if (result) {
@@ -169,7 +169,7 @@ const process = {
                         }
                     }
                     const updatedate = new Date();
-                    const query2 = "UPDATE clubboard SET title=?, content=?, updateDate=?, filename=?, fileOriginalName=? WHERE postID=?;";
+                    const query2 = "UPDATE freeboard SET title=?, content=?, updateDate=?, filename=?, fileOriginalName=? WHERE postID=?;";
                     const dbdata = [
                         data.title,
                         data.content,
@@ -189,7 +189,7 @@ const process = {
     postDelete: (req, res) => {
         const postID = parseInt(req.params.postID);
         const nickname = req.session.nickname;
-        const query1 = "SELECT * FROM clubboard where postID = ?";
+        const query1 = "SELECT * FROM freeboard where postID = ?";
         db.query(query1, [postID], (err, result) => {
             if (err) console.log(err);
             if (result) {
@@ -208,7 +208,7 @@ const process = {
                             }
                         });
                     }
-                    const query2 = "DELETE FROM clubboard WHERE postID = ?;";
+                    const query2 = "DELETE FROM freeboard WHERE postID = ?;";
                     db.query(query2, [postID], (err, result) => {
                         if (err) return console.log(err);
                         if (result) res.json({success: true});
@@ -222,7 +222,7 @@ const process = {
         const nickname = req.session.nickname;
         const content = req.body.content;
         const postdate = new Date();
-        const query = "INSERT INTO clubboardComment (postID, nickname, content, postDate) values (?, ?, ?, ?);";
+        const query = "INSERT INTO freeboardComment (postID, nickname, content, postDate) values (?, ?, ?, ?);";
         const dbdata = [
             postID,
             nickname,
@@ -237,14 +237,14 @@ const process = {
     commentDelete: (req, res) => {
         const commentID = parseInt(req.params.commentID);
         const nickname = req.session.nickname;
-        const query1 = "SELECT * FROM clubboardComment WHERE commentID=?";
+        const query1 = "SELECT * FROM freeboardComment WHERE commentID=?";
         db.query(query1, [commentID], (err, result) => {
             if (err) console.log(err);
             if (result) {
                 if (result[0].nickname !== nickname) {
                     res.json({ success: false, msg: "본인이 작성한 글만 삭제할 수 있습니다." });
                 } else {
-                    const query2 = "DELETE FROM clubboardComment WHERE commentID=?";
+                    const query2 = "DELETE FROM freeboardComment WHERE commentID=?";
                     db.query(query2, [commentID], (err, result) => {
                         if (err) return console.log(err);
                         if (result) res.json({success: true});

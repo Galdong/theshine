@@ -18,9 +18,9 @@
             <img src="/images/<%=image[i]%>">
         <% } %>
     </div>
-    <a href="/club/edit/<%=data[0].postID%>">수정</a>
+    <a href="/free/edit/<%=data[0].postID%>">수정</a>
     <p id="dbutton" class="btn">삭제</p>
-    <script src="/js/club/clubdelete.js"></script>
+    <script src="/js/free/freedelete.js"></script>
     <form class="form">
         <p><input id="content" name="content" type="textarea" placeholder="댓글 내용을 입력해주세요."></p>
         <p id="button" class="btn">등록</p>
@@ -33,6 +33,6 @@
         <button class="btn cdbutton" data-commentID="<%=comment[j].commentID%>">삭제</button>
     </ul>
     <% } %>
-    <script src="/js/club/clubcomment.js"></script>
+    <script src="/js/free/freecomment.js"></script>
 </body>
 </html>
