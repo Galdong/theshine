@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+        </tr>
+        <% for (let i=(page*page_num) - page_num; i<(page*page_num); i++) { %>
+            <% if (i > length) { %>
+                <% i++; %>
+            <% } else { %>
+            <tr>
+                <td><a href="/picnic/list/<%=page%>/<%=data[i].postID%>"><%=data[i].title%></a></td>
+                <td><%=data[i].nickname%></td>
+                <td><% if (!data[i].updateDate) { %>
+                    <%=data[i].postDate%> 
+                <% } else { %>
+                    <%=data[i].updateDate%>(수정됨)
+                <% } %></td>
+            </tr>
+            <% } %>
+        <% } %>
+        <tr>
+            <td colspan="5">
+                <% for(let j=0; j<(length/page_num); j++) { %>
+                [<a href="/picnic/list/<%=j+1%>"><%=j+1%></a>]
+                <% } %>
+            </td>
+        </tr>
+    </table>
+    <a href="/picnic/write">글쓰기</a>
+</body>
+</html>

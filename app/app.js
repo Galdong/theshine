@@ -34,6 +34,7 @@ const artRouter = require("./src/routes/art/art");
 const proRouter = require("./src/routes/pro/pro");
 const adminRouter = require("./src/routes/admin/admin");
 const freeRouter = require("./src/routes/free/free");
+const picnicRouter = require("./src/routes/picnic/picnic");
 
 app.set("views","./src/views");
 app.set("view engine", "ejs");
@@ -51,5 +52,6 @@ app.use("/art", artRouter); // 문화예술교육 게시판 라우팅등록
 app.use("/pro", proRouter); // 전문교육 게시판 라우팅등록
 app.use("/admin", adminRouter); // 관리자게시판 라우팅등록
 app.use("/free", freeRouter); // 자유게시판 라우팅등록
+app.use("/picnic", picnicRouter); // 나들이 정보 게시판 라우팅등록
 
 module.exports = app; // bin/www.js 에 내보내주려고

@@ -1,14 +1,14 @@
 const db = require('../../config/db');
-const Job = require("../../models/job/Job");
+const Picnic = require("../../models/picnic/Picnic");
 const fs = require('fs');
 const path = require('path');
 
 const output = {
-    getJob: (req, res) => {
-        const query = "SELECT * FROM jobboard ORDER BY postID DESC";
+    getPicnic: (req, res) => {
+        const query = "SELECT * FROM picnicboard ORDER BY postID DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("job/jobList", {
+            if (result) res.render("picnic/picnicList", {
                 'data':result,
                 'length':result.length - 1,
                 'page': 1,
@@ -18,10 +18,10 @@ const output = {
     },
     getList: (req, res) => {
         const page = parseInt(req.params.page);
-        const query = "SELECT * FROM jobboard ORDER BY postID DESC";
+        const query = "SELECT * FROM picnicboard ORDER BY postID DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("job/jobList", {
+            if (result) res.render("picnic/picnicList", {
                 'data':result,
                 'length':result.length - 1,
                 'page': page,
@@ -34,10 +34,10 @@ const output = {
         if (isNaN(postID)) {
             parseInt(postID);
         } else {
-            const query = "SELECT * FROM jobboard where postID = ?";
+            const query = "SELECT * FROM picnicboard where postID = ?";
             db.query(query, [postID], (err, result) => {
                 if (err) console.log(err);
-                if (result) res.render("job/jobView", {
+                if (result) res.render("picnic/picnicView", {
                     'data':result,
                     'imageNum':JSON.parse(result[0].filename).length,
                     'image':JSON.parse(result[0].filename)
@@ -47,19 +47,19 @@ const output = {
     },
     getWrite: (req, res) => {
         const nickname = req.session.nickname;
-        res.render("job/jobWrite", {'nickname':nickname});
+        res.render("picnic/picnicWrite", {'nickname':nickname});
     },
     getEdit: (req, res) => {
         const postID = parseInt(req.params.postID);
         const nickname = req.session.nickname;
-        const query = "SELECT * FROM jobboard where postID = ?";
+        const query = "SELECT * FROM picnicboard where postID = ?";
         db.query(query, [postID], (err, result) => {
             if (err) console.log(err);
             if (result) {
                 if (result[0].nickname !== nickname) {
                     res.send("<script>alert('본인이 작성한 글만 수정할 수 있습니다.');location.href=history.back();</script>");
                 } else {
-                    res.render("job/jobEdit", {
+                    res.render("picnic/picnicEdit", {
                         'data':result, 
                         'nickname':nickname,
                         'imageNum':JSON.parse(result[0].fileOriginalName),
@@ -84,8 +84,8 @@ const process = {
             imagesOriginalName.push(req.files[i].originalname);
         }
         const imageOriginalName = JSON.stringify(imagesOriginalName);
-        const job = new Job(req.body);
-        const response = await job.post(nickname, image, imageOriginalName);
+        const picnic = new Picnic(req.body);
+        const response = await picnic.post(nickname, image, imageOriginalName);
         return res.json(response);
     },
     postEdit: async (req, res) => {
@@ -104,7 +104,7 @@ const process = {
         if (isNaN(postID)) {
             parseInt(postID);
         } else {
-            const query1 = "SELECT * FROM jobboard WHERE postID = ?";
+            const query1 = "SELECT * FROM picnicboard WHERE postID = ?";
             db.query(query1, postID, (err, result) => {
                 if (err) console.log(err);
                 if (result) {
@@ -157,16 +157,11 @@ const process = {
                         }
                     }
                     const updatedate = new Date();
-                    const query2 = "UPDATE jobboard SET title=?, content=?, companyName=?, industry=?, project=?, startDate=?, employeeNum=?, ceoName=?, updateDate=?, filename=?, fileOriginalName=? WHERE postID=?;";
+                    const query2 = "UPDATE picnicboard SET title=?, content=?, location=?, updateDate=?, filename=?, fileOriginalName=? WHERE postID=?;";
                     const dbdata = [
                         data.title,
                         data.content,
-                        data.companyName,
-                        data.industry,
-                        data.project,
-                        data.startDate,
-                        data.employeeNum,
-                        data.ceoName,
+                        data.location,
                         updatedate,
                         newFilename,
                         newFileOriginalName,
@@ -183,7 +178,7 @@ const process = {
     postDelete: (req, res) => {
         const postID = parseInt(req.params.postID);
         const nickname = req.session.nickname;
-        const query1 = "SELECT * FROM jobboard where postID = ?";
+        const query1 = "SELECT * FROM picnicboard where postID = ?";
         db.query(query1, [postID], (err, result) => {
             if (err) console.log(err);
             if (result) {
@@ -202,7 +197,7 @@ const process = {
                             }
                         });
                     }
-                    const query2 = "DELETE FROM jobboard WHERE postID = ?;";
+                    const query2 = "DELETE FROM picnicboard WHERE postID = ?;";
                     db.query(query2, [postID], (err, result) => {
                         if (err) return console.log(err);
                         if (result) res.json({success: true});
