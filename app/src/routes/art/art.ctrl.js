@@ -91,7 +91,7 @@ const output = {
                     res.render("art/artEdit", {
                         'data':result, 
                         'nickname':nickname,
-                        'imageNum':JSON.parse(result[0].fileOriginalName),
+                        'imageNum':JSON.parse(result[0].filename).length,
                         'imageOriginalName':JSON.parse(result[0].fileOriginalName)
                     });
                 }

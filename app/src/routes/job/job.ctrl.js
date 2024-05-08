@@ -62,7 +62,7 @@ const output = {
                     res.render("job/jobEdit", {
                         'data':result, 
                         'nickname':nickname,
-                        'imageNum':JSON.parse(result[0].fileOriginalName),
+                        'imageNum':JSON.parse(result[0].filename).length,
                         'imageOriginalName':JSON.parse(result[0].fileOriginalName)
                     });
                 }
