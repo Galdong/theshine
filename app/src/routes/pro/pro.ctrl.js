@@ -68,7 +68,7 @@ const output = {
                 if (err) console.log(err);
                 if (result) res.render("pro/proView", {
                     'data':result,
-                    'imageNum':JSON.parse(result[0].filename.length),
+                    'imageNum':JSON.parse(result[0].filename).length,
                     'image':JSON.parse(result[0].filename)
                 });
             });
