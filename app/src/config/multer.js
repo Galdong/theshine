@@ -14,7 +14,7 @@ const s3Client = new S3Client({
 
 const storage = multerS3({
     s3: s3Client,
-    bucket: "challengeplus-images",
+    bucket: process.env.S3_BUCKET,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: function(req, file, cb) {
         file.originalname = Buffer.from(file.originalname, "latin1").toString("utf8"); // 원본파일명 한글깨짐 해결
