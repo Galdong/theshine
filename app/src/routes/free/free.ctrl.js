@@ -2,6 +2,7 @@ const db = require('../../config/db');
 const Free = require("../../models/free/Free");
 const fs = require('fs');
 const path = require('path');
+const { deleteFileFromS3 } = require('../../config/multer');
 
 const output = {
     getFree: (req, res) => {
@@ -88,7 +89,7 @@ const process = {
         const nickname = req.session.nickname;
         let images = [];
         for (var i=0; i < req.files.length; i++) {
-            images.push(req.files[i].filename);
+            images.push(req.files[i].key.split('/').pop());
         }
         const image = JSON.stringify(images);
         let imagesOriginalName = [];
@@ -106,7 +107,7 @@ const process = {
             var images =[];
             var imagesOriginalName = [];
             for (var i=0; i < req.files.length; i++) {
-                images.push(req.files[i].filename);
+                images.push(req.files[i].key.split('/').pop());
             }
             for (var j=0; j < req.files.length; j++) {
                 imagesOriginalName.push(req.files[j].originalname);
@@ -127,20 +128,14 @@ const process = {
                         if (!Array.isArray(deletedFile)) {
                             deletedFile = deletedFile.split();
                         }
-                        const filepath = path.join(__dirname, "../../public/images/");
-
+                    
                         const filesToDelete = fileOriginalName1.filter(name => deletedFile.includes(name));
                         
-                        filesToDelete.forEach(name => {
+                        filesToDelete.forEach(async (name) => {
                             const index = fileOriginalName1.indexOf(name);
                             if (index !== -1) {
-                                const fullFilepath = path.join(filepath, filename1[index]);
-                                fs.unlink(fullFilepath, (err) => {
-                                    if (err) {
-                                        console.error('file');
-                                        return;
-                                    }
-                                });
+                                const key = filename1[index];
+                                await deleteFileFromS3(key);
                             }
                         });
 
@@ -198,15 +193,9 @@ const process = {
                 } else {
                     const filename = JSON.parse(result[0].filename);
                     const fileNum = filename.length;
-                    const filepath = path.join(__dirname, "../../public/images/");
                     for (i=0; i<fileNum; i++) {
-                        const fullFilepath = path.join(filepath, filename[i]);
-                        fs.unlink(fullFilepath, (err) => {
-                            if (err) {
-                                console.error(err);
-                                return
-                            }
-                        });
+                        const key = filename[i];
+                        deleteFileFromS3(key);
                     }
                     const query2 = "DELETE FROM freeboard WHERE postID = ?;";
                     db.query(query2, [postID], (err, result) => {
