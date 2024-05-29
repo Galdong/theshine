@@ -23,8 +23,9 @@
                 <td><%=data[i].address%></td>
                 <td><%=data[i].mphone%></td>
                 <td><%=data[i].cat%></td>
-                <td><%=data[i].in_date%></td>
+                <td><%=data[i].joinDate%></td>
                 <td><%=data[i].nickname%></td>
+                <td><a href="/admin/users/resetpwd/<%=data[i].id%>">비밀번호 초기화</a></td>
             </tr>
         <% } %>
     </table>

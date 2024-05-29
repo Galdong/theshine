@@ -248,9 +248,9 @@ const process = {
     postApply: (req, res) => {
         const postID = parseInt(req.params.postID);
         const nickname = req.session.nickname;
-        const query = "SELECT ProfessionalEdu.postID, ProfessionalEdu.title, ProfessionalEdu.category, ProfessionalEdu.status, users.name, users.nickname, users.address, users.mphone FROM ProfessionalEdu INNER JOIN users ON ProfessionalEdu.nickname = users.nickname WHERE postID = ?;";
+        const query = "SELECT ProfessionalEdu.postID, ProfessionalEdu.title, ProfessionalEdu.category, ProfessionalEdu.status, users.name, users.nickname, users.address, users.mphone FROM ProfessionalEdu INNER JOIN users ON users.nickname = ? WHERE postID = ?;";
         const applydate = new Date();
-        db.query(query, [postID], (err, result) => {
+        db.query(query, [nickname, postID], (err, result) => {
             if (err) console.log(err);
             if (result) {
                 const query2 = "INSERT INTO proapply (postID, title, category, status, name, nickname, address, mphone, applydate) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";

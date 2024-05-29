@@ -1,4 +1,5 @@
 const db = require('../../config/db');
+const crypto = require("../home/crypto");
 
 const output = {
     getAdmin: (req, res) => {
@@ -11,28 +12,28 @@ const output = {
             if (result) res.render("admin/adminAuthcode", {'code': result[0].code});
         })
     },
-    getArteApplylist: (req, res) => {
-        const query = "SELECT * FROM arteapply ORDER BY applydate DESC";
+    getArtApplylist: (req, res) => {
+        const query = "SELECT * FROM artapply ORDER BY applydate DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminArteApplylist", {
+            if (result) res.render("admin/adminArtApplylist", {
                 'data': result,
                 'length': result.length,
             });
         });
     },
-    getTechApplylist: (req, res) => {
-        const query = "SELECT * FROM techapply ORDER BY applydate DESC";
+    getProApplylist: (req, res) => {
+        const query = "SELECT * FROM proapply ORDER BY applydate DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminTechApplylist", {
+            if (result) res.render("admin/adminProApplylist", {
                 'data': result,
                 'length': result.length,
             });
         });
     },
     getUsers: (req, res) => {
-        const query = "SELECT id, name, address, mphone, cat, in_date, nickname FROM users ORDER BY in_date DESC;";
+        const query = "SELECT id, name, address, mphone, category, joinDate, nickname FROM users ORDER BY joinDate DESC;";
         db.query(query, (err, result) => {
             if (err) console.log(err);
             if (result) res.render("admin/adminUsers", {
@@ -40,9 +41,25 @@ const output = {
                 'length': result.length
             });
         });
+    },
+    getResetPwd: (req, res) => {
+        const id = req.params.id;
+        res.render("admin/ResetPassword", {'id': id});
+    }
+}
+
+const process = {
+    ResetPwd: async (req, res) => {
+        const id = req.params.id;
+        const { password, salt } = await crypto.createHashedPassword('123456789a');
+        const query = "UPDATE users SET password=?, salt=? WHERE id=?;";
+        db.query(query, [password, salt, id], (err, result) => {
+            if (err) console.log(err);
+            if (result) res.json({success: true});
+        });
     }
 }
 
 module.exports = {
-    output,
+    output, process
 };

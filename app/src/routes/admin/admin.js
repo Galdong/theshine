@@ -5,8 +5,11 @@ const ctrl = require("./admin.ctrl");
 
 router.get("/", ctrl.output.getAdmin);
 router.get("/authcode", ctrl.output.getAuth); // 인증코드 발급하는 곳
-router.get("/arteapplylist", ctrl.output.getArteApplylist); // 문화예술 교육신청 현황 보는 곳
-router.get("/techapplylist", ctrl.output.getTechApplylist); // 전문 교육신청 현황 보는 곳
+router.get("/artapplylist", ctrl.output.getArtApplylist); // 문화예술 교육신청 현황 보는 곳
+router.get("/proapplylist", ctrl.output.getProApplylist); // 전문 교육신청 현황 보는 곳
 router.get("/users", ctrl.output.getUsers); // 사용자 정보 보는 곳
+router.get("/users/resetpwd/:id", ctrl.output.getResetPwd); // 사용자 비밀번호 초기화
+
+router.post("/users/resetpwd/:id", ctrl.process.ResetPwd);
 
 module.exports = router;
