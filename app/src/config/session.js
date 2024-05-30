@@ -2,8 +2,6 @@ const express = require("express");
 const app = express();
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
-const dotenv = require("dotenv");
-dotenv.config();
 
 const DBoptions = {
    host: process.env.DB_HOST,

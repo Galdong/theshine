@@ -3,7 +3,10 @@ const crypto = require("../home/crypto");
 
 const output = {
     getAdmin: (req, res) => {
-        res.render("admin/adminList")
+        res.render("admin/adminLogin");
+    },
+    getMain: (req, res) => {
+        res.render("admin/adminList");
     },
     getAuth: (req, res) => {
         const query = "SELECT * FROM authcode;";
@@ -57,9 +60,40 @@ const process = {
             if (err) console.log(err);
             if (result) res.json({success: true});
         });
+    },
+    adminLogin: (req, res) => {
+        const client = req.body;
+        try {
+            if (client.id === "admin") {
+                if (client.password === "1234") {
+                    req.session.auth = 'admin';
+                    req.session.cookie.maxAge = 30*60*1000; // 세션만료시간 30분 설정
+                    req.session.save(function() {
+                        return res.json({ success : true });
+                    });
+                } else {
+                    return res.json({ success : false, msg : "비밀번호가 틀렸습니다."});
+                }
+            } else {
+                return res.json({ success : false, msg : "존재하지 않는 아이디입니다."});
+            }
+        } catch (err) {
+            return res.json({ success: false, msg: `${err}`});
+        }
+    }
+    
+}
+
+const session = {
+    sessionExpiration: (req, res, next) => {
+        if (req.session && req.session.auth === 'admin') {
+            next();
+        } else {
+            res.render("admin/adminAlert");
+        }
     }
 }
 
 module.exports = {
-    output, process
+    output, process, session
 };
