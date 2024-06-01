@@ -80,6 +80,66 @@ const process = {
         } catch (err) {
             return res.json({ success: false, msg: `${err}`});
         }
+    },
+    ArtChangeStatus: (req, res) => {
+        const title = req.body.title;
+        const id = req.body.id;
+        const applydate = req.body.applydate;
+        const query1 = "SELECT applyID, applyStatus from artapply WHERE title=? AND id=? AND applydate=?;";
+        db.query(query1, [title, id, applydate], (err, data) => {
+            if (err) console.log(err);
+            if (data) { 
+                let query2;
+                switch (data[0].applyStatus) {
+                    case 'wait':
+                        query2 = "UPDATE artapply SET applyStatus='confirm' WHERE applyID=?";
+                        break;
+                    case 'confirm':
+                        query2 = "UPDATE artapply SET applyStatus='complete' WHERE applyID=?";
+                        break;
+                    case 'complete':
+                        query2 = "UPDATE artapply SET applyStatus='wait' WHERE applyID=?";
+                        break;
+                    default:
+                        console.log("신청현황이 잘못된 정보입니다.");
+                        return;
+                }
+                db.query(query2, [data[0].applyID], (err, result) => {
+                    if (err) console.log(err);
+                    if (result) res.json({success : true});
+                });
+            }
+        });
+    },
+    ProChangeStatus: (req, res) => {
+        const title = req.body.title;
+        const id = req.body.id;
+        const applydate = req.body.applydate;
+        const query1 = "SELECT applyID, applyStatus from proapply WHERE title=? AND id=? AND applydate=?;";
+        db.query(query1, [title, id, applydate], (err, data) => {
+            if (err) console.log(err);
+            if (data) { 
+                let query2;
+                switch (data[0].applyStatus) {
+                    case 'wait':
+                        query2 = "UPDATE proapply SET applyStatus='confirm' WHERE applyID=?";
+                        break;
+                    case 'confirm':
+                        query2 = "UPDATE proapply SET applyStatus='complete' WHERE applyID=?";
+                        break;
+                    case 'complete':
+                        query2 = "UPDATE proapply SET applyStatus='wait' WHERE applyID=?";
+                        break;
+                    default:
+                        console.log("신청현황이 잘못된 정보입니다.");
+                        return;
+                }
+                db.query(query2, [data[0].applyID], (err, result) => {
+                    if (err) console.log(err);
+                    if (result) res.json({success : true});
+                });
+            }
+        });
     }
     
 }

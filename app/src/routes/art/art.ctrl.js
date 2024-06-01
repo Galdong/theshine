@@ -248,20 +248,20 @@ const process = {
     postApply: (req, res) => {
         const postID = parseInt(req.params.postID);
         const nickname = req.session.nickname;
-        const query = "SELECT CulturalArtEdu.postID, CulturalArtEdu.title, CulturalArtEdu.category, CulturalArtEdu.status, users.name, users.nickname, users.address, users.mphone FROM CulturalArtEdu INNER JOIN users ON users.nickname = ? WHERE postID = ?;";
+        const query = "SELECT CulturalArtEdu.postID, CulturalArtEdu.title, CulturalArtEdu.category, CulturalArtEdu.status, users.id, users.name, users.nickname, users.mphone FROM CulturalArtEdu INNER JOIN users ON users.nickname = ? WHERE postID = ?;";
         const applydate = new Date();
         db.query(query, [nickname, postID], (err, result) => {
             if (err) console.log(err);
             if (result) {
-                const query2 = "INSERT INTO artapply (postID, title, category, status, name, nickname, address, mphone, applydate) values (?, ?, ?, ?, ?, ?, ?, ?, ?);";
+                const query2 = "INSERT INTO artapply (postID, title, category, recruitStatus, id, name, nickname, mphone, applydate, applyStatus) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'wait');";
                 dbdata = [
                     postID,
                     result[0].title,
                     result[0].category,
                     result[0].status,
+                    result[0].id,
                     result[0].name,
                     result[0].nickname,
-                    result[0].address,
                     result[0].mphone,
                     applydate
                 ];

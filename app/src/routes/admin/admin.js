@@ -13,5 +13,7 @@ router.get("/users/resetpwd/:id", ctrl.session.sessionExpiration, ctrl.output.ge
 
 router.post("/users/resetpwd/:id", ctrl.process.ResetPwd);
 router.post("/login", ctrl.process.adminLogin);
+router.post("/artapplylist/change", ctrl.process.ArtChangeStatus); // 신청현황 변경
+router.post("/proapplylist/change", ctrl.process.ProChangeStatus); // 신청현황 변경
 
 module.exports = router;

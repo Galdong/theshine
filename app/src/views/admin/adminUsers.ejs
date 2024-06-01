@@ -4,9 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .search-container {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        #searchField, #searchInput, #search {
+            margin-right: 10px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        #searchField, #searchInput {
+            width: 150px;
+        }
+        #search {
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+        }
+        #users-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #users {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007BFF;
+            color: #fff;
+        }
+        tr:nth-child(even) {
+            background-color: #f4f4f9;
+        }
+        tr:hover {
+            background-color: #e9ecef;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <table>
+    <h2 id="users-container">회원 정보</h2>
+    <div class="search-container">
+        <select id="searchField">
+            <option value="0">아이디</option>
+            <option value="1">이름</option>
+            <option value="3">전화번호</option>
+            <option value="6">닉네임</option>
+        </select>
+        <input type="text" id="searchInput" placeholder="검색어를 입력해주세요.">
+        <button id="search">검색</button>
+    </div>
+    <table id="users">
         <tr>
             <th>ID</th>
             <th>이름</th>
@@ -15,6 +92,7 @@
             <th>회원 유형</th>
             <th>가입일</th>
             <th>닉네임</th>
+            <th>비밀번호 초기화</th>
         </tr>
         <% for (let i=0; i<length; i++) { %>
             <tr>
@@ -25,9 +103,10 @@
                 <td><%=data[i].cat%></td>
                 <td><%=data[i].joinDate%></td>
                 <td><%=data[i].nickname%></td>
-                <td><a href="/admin/users/resetpwd/<%=data[i].id%>">비밀번호 초기화</a></td>
+                <td><a href="/admin/users/resetpwd/<%=data[i].id%>">초기화</a></td>
             </tr>
         <% } %>
     </table>
+    <script src="/js/admin/adminusers.js"></script>
 </body>
 </html>
