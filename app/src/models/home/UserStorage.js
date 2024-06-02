@@ -58,7 +58,7 @@ exports.savep = async (userInfo) => { // 공급자 회원가입
         return { success: false, msg: '이미 존재하는 아이디입니다.'};
     }
     return new Promise((resolve, reject) => {
-        const query1 = "INSERT INTO users (id, name, nickname, password, salt, address, mphone, category, joinDate, email) VALUES(?, ?, ?, ?, ?, ?, ?, 'provider', ?, ?);";
+        const query1 = "INSERT INTO users (id, name, nickname, password, salt, address, mphone, category, joinDate, email) VALUES(?, ?, ?, ?, ?, ?, ?, 'instructor', ?, ?);";
         const dbdata = [
             userInfo.id, 
             userInfo.name, 

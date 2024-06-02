@@ -1,100 +1,53 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 10px 20px; /* 위쪽 여백 조정 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .container {
-            width: 100%;
-            max-width: 1000px; /* 테이블 최대 너비 조정 */
-            text-align: center; /* 테이블 중앙 정렬 */
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: center; /* 텍스트 중앙 정렬 */
-        }
-        th {
-            background-color: #007BFF;
-            color: #fff;
-        }
-        tr:nth-child(even) {
-            background-color: #f4f4f9;
-        }
-        tr:hover {
-            background-color: #e9ecef;
-        }
-        a {
-            color: #007BFF;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        #change {
-            background-color: transparent;
-            border: none;
-            color: #007BFF;
-            cursor: pointer;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>전문교육 신청 현황</h1>
-        <table>
-            <tr>
-                <th>제목</th>
-                <th>카테고리</th>
-                <th>신청자 아이디</th>
-                <th>신청자 이름</th>
-                <th>신청자 전화번호</th>
-                <th>신청일</th>
-                <th>모집현황</th>
-                <th>신청현황</th>
-            </tr>
-            <% for (let i=0; i<length; i++) { %>
-                <tr>
-                    <td class="title"><%=data[i].title%></td>
-                    <td><%=data[i].category%></td>
-                    <td class="id"><%=data[i].id%></td>
-                    <td><%=data[i].name%></td>
-                    <td><%=data[i].mphone%></td>
-                    <td class="applydate"><%=data[i].applydate%></td>
-                    <td><% if (data[i].recruitStatus == 'ing') { %> 접수중 
-                        <% } else if (data[i].recruitStatus == 'end') { %> 입금대기
-                        <% } %></td>
-                    <td><% if (data[i].applyStatus == 'wait') { %> 입금대기 
-                        <% } else if (data[i].applyStatus == 'confirm') { %> 입금확인 
-                        <% } else if (data[i].applyStatus == 'complete') { %> 신청완료
-                        <% } %> <button id="change">변경</button></td>
-                </tr>
-            <% } %>
-        </table>
+<div class="container">
+    <h1 class="centered">전문교육 신청 현황</h1>
+    <div class="search-container">
+        <select id="searchField">
+            <option value="0">제목</option>
+            <option value="2">신청자 아이디</option>
+            <option value="3">신청자 이름</option>
+            <option value="4">신청자 전화번호</option>
+        </select>
+        <input type="text" id="searchInput" placeholder="검색어를 입력해주세요.">
+        <button id="search">검색</button>
     </div>
+    <table id="proapply">
+        <tr>
+            <th>제목</th>
+            <th>카테고리</th>
+            <th>신청자 아이디</th>
+            <th>신청자 이름</th>
+            <th>신청자 전화번호</th>
+            <th>신청일</th>
+            <th>모집현황</th>
+            <th>신청현황</th>
+        </tr>
+        <% for (let i = 0; i < length; i++) { %>
+        <tr>
+            <td class="title"><%= data[i].title %></td>
+            <td><%= data[i].category %></td>
+            <td class="id"><%= data[i].id %></td>
+            <td><%= data[i].name %></td>
+            <td><%= data[i].mphone %></td>
+            <td class="applydate"><%= data[i].applydate %></td>
+            <td>
+                <% if (data[i].recruitStatus == 'ing') { %>
+                접수중
+                <% } else if (data[i].recruitStatus == 'end') { %>
+                입금대기
+                <% } %>
+            </td>
+            <td>
+                <% if (data[i].applyStatus == 'wait') { %>
+                입금대기
+                <% } else if (data[i].applyStatus == 'confirm') { %>
+                입금확인
+                <% } else if (data[i].applyStatus == 'complete') { %>
+                신청완료
+                <% } %>
+                <button id="change">변경</button>
+            </td>
+        </tr>
+        <% } %>
+    </table>
+</div>
 <script src="/js/admin/adminprolist.js"></script>
-</body>
-</html>

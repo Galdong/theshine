@@ -3,25 +3,30 @@ const crypto = require("../home/crypto");
 
 const output = {
     getAdmin: (req, res) => {
-        res.render("admin/adminLogin");
+        if (req.session.auth == 'admin') {
+            res.redirect("admin/main");
+        } else {
+            res.render("admin/adminLogin");
+        }
     },
     getMain: (req, res) => {
-        res.render("admin/adminList");
+        res.render("admin/adminList", { content: 'adminMain'});
     },
     getAuth: (req, res) => {
         const query = "SELECT * FROM authcode;";
         db.query(query, (err,result) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminAuthcode", {'code': result[0].code});
+            if (result) res.render("admin/adminList", {content: 'adminAuthcode', 'code': result[0].code});
         })
     },
     getArtApplylist: (req, res) => {
         const query = "SELECT * FROM artapply ORDER BY applydate DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminArtApplylist", {
+            if (result) res.render("admin/adminList", {
                 'data': result,
                 'length': result.length,
+                content : 'adminArtApplylist'
             });
         });
     },
@@ -29,9 +34,10 @@ const output = {
         const query = "SELECT * FROM proapply ORDER BY applydate DESC";
         db.query(query, (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminProApplylist", {
+            if (result) res.render("admin/adminList", {
                 'data': result,
                 'length': result.length,
+                content : 'adminProApplylist'
             });
         });
     },
@@ -39,21 +45,27 @@ const output = {
         const query = "SELECT id, name, address, mphone, category, joinDate, nickname FROM users ORDER BY joinDate DESC;";
         db.query(query, (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminUsers", {
+            if (result) res.render("admin/adminList", {
                 'data': result,
-                'length': result.length
+                'length': result.length,
+                content : 'adminUsers'
             });
         });
     },
-    getResetPwd: (req, res) => {
-        const id = req.params.id;
-        res.render("admin/ResetPassword", {'id': id});
-    }
+    getMessage: (req, res) => {
+        const query = "SELECT * FROM users;";
+        db.query(query, (err, result) => {
+            res.render("admin/adminList", {
+                content: 'adminMessage',
+                users: result,
+               });
+        });
+    },
 }
 
 const process = {
     ResetPwd: async (req, res) => {
-        const id = req.params.id;
+        const id = req.body.id;
         const { password, salt } = await crypto.createHashedPassword('123456789a');
         const query = "UPDATE users SET password=?, salt=? WHERE id=?;";
         db.query(query, [password, salt, id], (err, result) => {
