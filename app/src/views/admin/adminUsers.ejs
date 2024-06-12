@@ -4,8 +4,8 @@
         <select id="searchField">
             <option value="0">아이디</option>
             <option value="1">이름</option>
-            <option value="3">전화번호</option>
-            <option value="6">닉네임</option>
+            <option value="2">전화번호</option>
+            <option value="4">닉네임</option>
         </select>
         <input type="text" id="searchInput" placeholder="검색어를 입력해주세요.">
         <button id="search">검색</button>
@@ -14,9 +14,7 @@
         <tr>
             <th>ID</th>
             <th>이름</th>
-            <th>주소</th>
             <th>전화번호</th>
-            <th>회원 유형</th>
             <th>가입일</th>
             <th>닉네임</th>
             <th>비밀번호 초기화</th>
@@ -25,13 +23,7 @@
         <tr>
             <td class="id"><%= data[i].id %></td>
             <td><%= data[i].name %></td>
-            <td><%= data[i].address %></td>
             <td><%= data[i].mphone %></td>
-            <td><% if (data[i].category == 'user') { %>
-                일반사용자
-                <% } else if (data[i].category == 'instructor') { %>
-                강사
-                <% } %></td>
             <td><%= data[i].joinDate %></td>
             <td><%= data[i].nickname %></td>
             <td><button id="reset">초기화</button></td>

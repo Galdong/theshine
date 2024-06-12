@@ -1,1 +1,100 @@
-관리자페이지
+<div class="dashboard">
+    <h2>대시보드</h2>
+    
+    <div class="section">
+        <h3>회원 관리</h3>
+        <div class="stats">
+            <div class="stat">
+                <h4>전체 회원 수</h4>
+                <p><%= data.totalUsers %></p>
+            </div>
+            <div class="stat">
+                <h4>신규 가입자 수 (최근 3일)</h4>
+                <p><%= data.newUsers %></p>
+            </div>
+            <div class="stat">
+                <h4>전체 강사 수</h4>
+                <p><%= data.totalInstructors %></p>
+            </div>
+            <div class="stat">
+                <h4>신규 강사 수</h4>
+                <p><%= data.newInstructors %></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3>교육 현황</h3>
+        <div class="stats">
+            <div class="stat">
+                <h4>문화예술 교육 신청 수</h4>
+                <p><%= data.artApplyCount %></p>
+            </div>
+            <div class="stat">
+                <h4>전문 교육 신청 수</h4>
+                <p><%= data.proApplyCount %></p>
+            </div>
+            <div class="stat">
+                <h4>신규 문화예술 교육 신청 수</h4>
+                <p><%= data.newArtApplyCount %></p>
+            </div>
+            <div class="stat">
+                <h4>신규 전문 교육 신청 수</h4>
+                <p><%= data.newProApplyCount %></p>
+            </div>
+            <div class="stat">
+                <h4>입금 대기 수</h4>
+                <p><%= data.waitCount %></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .dashboard h2 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .section {
+        margin-bottom: 40px;
+    }
+
+    .section h3 {
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .stat {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        flex: 1;
+        text-align: center;
+        min-width: 150px;
+    }
+
+    .stat h4 {
+        margin-bottom: 10px;
+        color: #666;
+    }
+
+    .stat p {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+</style>

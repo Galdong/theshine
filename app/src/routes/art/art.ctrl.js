@@ -3,6 +3,7 @@ const Art = require("../../models/art/Art");
 const fs = require('fs');
 const path = require('path');
 const { deleteFileFromS3 } = require('../../config/multer');
+const sendMessage = require('../../config/message');
 
 const output = {
     getArt: (req, res) => {
@@ -269,6 +270,10 @@ const process = {
                     if (err) console.log(err);
                     if (data) res.json({success: true});
                 });
+                const to = result[0].mphone;
+                const content = `[챌린지 플러스] '${result[0].title}'의 교육 신청이 완료되었습니다.\n 
+                1234-2181-2154-12 (예금주:갈동현)으로 날짜까지 금액 입금부탁드립니다.`
+                sendMessage(to, content);
             }
         });
     }

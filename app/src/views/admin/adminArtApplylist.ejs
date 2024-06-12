@@ -18,8 +18,10 @@
             <th>신청자 이름</th>
             <th>신청자 전화번호</th>
             <th>신청일</th>
-            <th>모집현황</th>
-            <th>신청현황</th>
+            <th>모집상태</th>
+            <th>신청상태</th>
+            <th>상태변경</th>
+            <th>신청삭제</th>
         </tr>
         <% for (let i = 0; i < length; i++) { %>
         <tr>
@@ -44,8 +46,10 @@
                 <% } else if (data[i].applyStatus == 'complete') { %>
                 신청완료
                 <% } %>
-                <button id="change">변경</button>
+                
             </td>
+            <td><button id="change">변경</button></td>
+            <td><button id="delete">삭제</button></td>
         </tr>
         <% } %>
     </table>

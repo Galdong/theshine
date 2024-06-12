@@ -1,5 +1,6 @@
 const changeBtn = document.querySelectorAll('#change');
 const searchBtn = document.querySelector('#search');
+const deleteBtn = document.querySelectorAll('#delete');
 
 changeBtn.forEach(function (button) {
     button.addEventListener("click", function() {
@@ -95,4 +96,43 @@ function search() {
         const buttonContainer = document.querySelector('.container');
         buttonContainer.appendChild(allBtn);
     }
+}
+
+deleteBtn.forEach(function (button) {
+    button.addEventListener("click", function() {
+        const title = button.closest('tr').querySelector('.title').textContent;
+        const id = button.closest('tr').querySelector('.id').textContent;
+        const applydate = button.closest('tr').querySelector('.applydate').textContent;
+        const response = confirm("정말로 신청내역을 삭제하시겠습니까?");
+        if (response) {
+            deleteApply(title, id, applydate);
+        } else {
+        }
+    });
+});
+
+function deleteApply(title, id, applydate) {
+    fetch("/admin/artapplylist/delete", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            'title': title,
+            'id': id,
+            'applydate': applydate
+        })
+    })
+    .then((res)=>res.json())
+    .then((res) => {
+        if (res.success) {
+            alert("삭제되었습니다.");
+            location.href = "/admin/artapplylist";
+        } else {
+            alert(res.msg);
+        }
+    })
+    .catch((err) => {
+        console.error("신청내역 삭제 중 오류 발생");
+    })
 }
