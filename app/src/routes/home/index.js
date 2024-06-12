@@ -11,11 +11,14 @@ router.get("/logout", ctrl.output.logout);
 router.get("/registerc", ctrl.output.registerc);
 router.get("/registerp", ctrl.output.registerp);
 router.get("/registercat", ctrl.output.registercat);
+router.get("/verify", ctrl.output.getVerify);
 // router.get("/findpw", ctrl.output.getFindpw); // 비밀번호찾기
 
 router.post("/login", ctrl.process.login);
 router.post("/registerc", ctrl.process.registerc);
 router.post("/registerp", ctrl.process.registerp);
+router.post("/verify", ctrl.process.verify);
+router.post("/verifycode", ctrl.process.verifycode);
 // router.post("/findpw", ctrl.process.findpw);
 
 module.exports = router; // router를 외부파일에서 사용할 수 있도록 함.

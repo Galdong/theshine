@@ -18,6 +18,14 @@
         <input id="confirm-password" type="password" placeholder="비밀번호 확인"/>
         <input id="address" type="text" placeholder="주소"/>
         <input id="mphone" type="text" placeholder="전화번호"/>
+        <button id="submitPhone" type="button">인증하기</button>
+        <div id="verificationSection" style="display: none;">
+          <p><span id="mphone-display"></span> (으)로 인증번호를 전송했습니다.</p>
+          인증번호를 입력해주세요
+          <input id="verificationCode" type="text">
+          <button id="submitCode" type="button">확인</button>
+          <span id="countdown">05:00</span>
+        </div>
         <input id="nickname" type="text" placeholder="닉네임"/>
         <input id="email" type="text" placeholder="E-mail"/>
         <p id="button" class="btn btn-primary btn-block btn-large">SIGN UP</p>

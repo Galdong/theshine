@@ -1,7 +1,7 @@
 const UserStorage = require("../../models/home/UserStorage");
 const auth = require("./auth");
 const crypto = require("./crypto");
-// const smtpTransport = require("../../config/email");
+const sendMessage = require('../../config/message');
 
 const output = {
     home: (req, res) => {
@@ -27,6 +27,10 @@ const output = {
     registercat: (req, res) => {
         res.render("home/registercat");
     },
+    getVerify: (req, res) => {
+        const mphone = req.session.mphone;
+        res.render("home/verify", { mphone });
+    }
     // getFindpw: (req, res) => {
     //     res.render("home/findpw");
     // },
@@ -80,6 +84,39 @@ const process = {
             return res.json({ success: false, msg: `${err}`});
         }
     },
+    verify: async (req, res) => {
+        const to = req.body.mphone;
+        function generateRandomCode() {
+            const randomNum = Math.floor(Math.random() * 1000000);
+            return String(randomNum).padStart(6, '0');
+        }
+        const randomCode = generateRandomCode();
+        const content = `[챌린지 플러스] 인증번호 [${randomCode}] 입니다.`;
+
+        try {
+            await sendMessage(to, content);
+            req.session.randomCode = randomCode;
+            req.session.codeExpiry = Date.now() + 1000 * 60 * 5 // 인증코드 만료시간 5분
+            res.json({success: true});
+        } catch (err) {
+            res.json({success: false, msg:'메시지 전송 실패'});
+        }
+    },
+    verifycode: (req, res) => {
+        const userCode = req.body.verificationCode;
+        const sessionCode = req.session.randomCode;
+        const codeExpiry = req.session.codeExpiry;
+
+        if (Date.now() > codeExpiry) {
+            return res.json({success : false, msg : '인증 시간이 만료되었습니다.'});
+        }
+        
+        if (userCode === sessionCode) {
+            res.json({success : true});
+        } else { 
+            res.json({success : false, msg : '인증번호가 일치하지 않습니다.'});
+        }
+    }
 
     
     // findpw: async (req, res) => {
