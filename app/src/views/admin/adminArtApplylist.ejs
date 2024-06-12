@@ -18,6 +18,7 @@
             <th>신청자 이름</th>
             <th>신청자 전화번호</th>
             <th>신청일</th>
+            <th>가격</th>
             <th>모집상태</th>
             <th>신청상태</th>
             <th>상태변경</th>
@@ -31,6 +32,7 @@
             <td><%= data[i].name %></td>
             <td><%= data[i].mphone %></td>
             <td class="applydate"><%= data[i].applydate %></td>
+            <td><%= data[i].price %></td>
             <td>
                 <% if (data[i].recruitStatus == 'ing') { %>
                 접수중

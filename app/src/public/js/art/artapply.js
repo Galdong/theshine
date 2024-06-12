@@ -28,7 +28,7 @@ function apply() {
         }
     })
     .catch((err) => { // 예외처리
-        console.error("글 삭제 중 에러 발생");
+        console.error("신청 중 에러 발생");
     });      
 }
 function deleteform() {

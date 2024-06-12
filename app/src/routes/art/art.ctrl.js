@@ -1,7 +1,5 @@
 const db = require('../../config/db');
 const Art = require("../../models/art/Art");
-const fs = require('fs');
-const path = require('path');
 const { deleteFileFromS3 } = require('../../config/multer');
 const sendMessage = require('../../config/message');
 
@@ -249,17 +247,18 @@ const process = {
     postApply: (req, res) => {
         const postID = parseInt(req.params.postID);
         const nickname = req.session.nickname;
-        const query = "SELECT CulturalArtEdu.postID, CulturalArtEdu.title, CulturalArtEdu.category, CulturalArtEdu.status, users.id, users.name, users.nickname, users.mphone FROM CulturalArtEdu INNER JOIN users ON users.nickname = ? WHERE postID = ?;";
+        const query = "SELECT CulturalArtEdu.postID, CulturalArtEdu.title, CulturalArtEdu.category, CulturalArtEdu.status, CulturalArtEdu.price, users.id, users.name, users.nickname, users.mphone FROM CulturalArtEdu INNER JOIN users ON users.nickname = ? WHERE postID = ?;";
         const applydate = new Date();
         db.query(query, [nickname, postID], (err, result) => {
             if (err) console.log(err);
             if (result) {
-                const query2 = "INSERT INTO artapply (postID, title, category, recruitStatus, id, name, nickname, mphone, applydate, applyStatus) values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'wait');";
+                const query2 = "INSERT INTO artapply (postID, title, category, recruitStatus, price, id, name, nickname, mphone, applydate, applyStatus) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'wait');";
                 dbdata = [
                     postID,
                     result[0].title,
                     result[0].category,
                     result[0].status,
+                    result[0].price,
                     result[0].id,
                     result[0].name,
                     result[0].nickname,
@@ -270,10 +269,23 @@ const process = {
                     if (err) console.log(err);
                     if (data) res.json({success: true});
                 });
+                async function sendMessages(to, content1, content2) {
+                    try {
+                        await sendMessage(to, content1);
+                        await sendMessage(to, content2);
+                    } catch (error) {
+                        console.error('메시지 전송 실패');
+                    }
+                }
+                applydate.setDate(applydate.getDate() + 7);
+                const month = String(applydate.getMonth() + 1).padStart(2, '0');
+                const day = String(applydate.getDate()).padStart(2, '0');
+                const paymentDate = `${month}-${day}`;
+                const price = result[0].price.toLocaleString('en-US');
                 const to = result[0].mphone;
-                const content = `[챌린지 플러스] '${result[0].title}'의 교육 신청이 완료되었습니다.\n 
-                1234-2181-2154-12 (예금주:갈동현)으로 날짜까지 금액 입금부탁드립니다.`
-                sendMessage(to, content);
+                const content1 = `[챌린지 플러스] ${result[0].name} 님의 교육 신청이 완료되었습니다.`
+                const content2 = `농협 12342183213451 (갈동현)으로 ${paymentDate}까지 ${price}원 입금부탁드립니다.`
+                sendMessages(to, content1, content2);
             }
         });
     }

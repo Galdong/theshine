@@ -2,6 +2,7 @@ const db = require('../../config/db');
 const crypto = require("../home/crypto");
 const adminAccount = require("../../config/admin");
 const util = require('util');
+const sendMessage = require('../../config/message');
 
 const output = {
     getAdmin: (req, res) => {
@@ -25,7 +26,6 @@ const output = {
                 const newProApplyCount = await query("SELECT COUNT(*) AS newProApplyCount FROM proapply WHERE applyDate >= DATE_SUB(NOW(), INTERVAL 3 DAY)");
                 const artWaitCount = await query("SELECT COUNT(*) AS artWaitCount FROM artapply WHERE applyStatus='wait'");
                 const proWaitCount = await query("SELECT COUNT(*) AS proWaitCount FROM proapply WHERE applyStatus='wait'");
-                const waitCount = parseInt(artWaitCount[0].artWaitCount) + parseInt(proWaitCount[0].proWaitCount);
 
                 return {
                     totalUsers: totalUsers[0].totalUsers,
@@ -142,16 +142,19 @@ const process = {
         const title = req.body.title;
         const id = req.body.id;
         const applydate = req.body.applydate;
-        const query1 = "SELECT applyID, applyStatus from artapply WHERE title=? AND id=? AND applydate=?;";
+        const query1 = "SELECT applyID, applyStatus, name, mphone from artapply WHERE title=? AND id=? AND applydate=?;";
         db.query(query1, [title, id, applydate], (err, data) => {
             if (err) console.log(err);
-            if (data) { 
+            if (data) {
+                const to = data[0].mphone; 
                 if (data[0].applyStatus == 'complete') {
                     res.json({success : false, msg:'더 이상 변경할 수 없습니다.'});
                 } else {
                     let query2;
                     if (data[0].applyStatus == 'wait') {
                         query2 = "UPDATE artapply SET applyStatus='confirm' WHERE applyID=?";
+                        const content = `[챌린지플러스] ${data[0].name} 님 신청하신 교육이 입금 확인되었습니다.`
+                        sendMessage(to, content);
                     } else if (data[0].applyStatus == 'confirm') {
                         query2 = "UPDATE artapply SET applyStatus='complete' WHERE applyID=?";
                     } else {
@@ -169,16 +172,19 @@ const process = {
         const title = req.body.title;
         const id = req.body.id;
         const applydate = req.body.applydate;
-        const query1 = "SELECT applyID, applyStatus from proapply WHERE title=? AND id=? AND applydate=?;";
+        const query1 = "SELECT applyID, applyStatus, name, mphone from proapply WHERE title=? AND id=? AND applydate=?;";
         db.query(query1, [title, id, applydate], (err, data) => {
             if (err) console.log(err);
             if (data) { 
+                const to = data[0].mphone; 
                 if (data[0].applyStatus == 'complete') {
                     res.json({success : false, msg:'더 이상 변경할 수 없습니다.'});
                 } else {
                     let query2;
                     if (data[0].applyStatus == 'wait') {
                         query2 = "UPDATE proapply SET applyStatus='confirm' WHERE applyID=?";
+                        const content = `[챌린지플러스] ${data[0].name} 님 신청하신 교육이 입금 확인되었습니다.`
+                        sendMessage(to, content);
                     } else if (data[0].applyStatus == 'confirm') {
                         query2 = "UPDATE proapply SET applyStatus='complete' WHERE applyID=?";
                     } else {

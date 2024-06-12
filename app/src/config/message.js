@@ -45,7 +45,6 @@ const sendMessage = async (to, content) => {
 
     try {
         const response = await axios.post(url, body, { headers });
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error(error);
