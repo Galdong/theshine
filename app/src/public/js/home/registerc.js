@@ -16,6 +16,8 @@ registerBtn.addEventListener("click", registerc);
 submitPhoneBtn.addEventListener("click", submitPhone);
 submitCodeBtn.addEventListener("click", submitCode);
 
+let isVerified = false; // 전화번호 인증 성공(True)/실패(False)
+
 function registerc() {
     if (!id.value) return alert("아이디를 입력해주세요.");
     if (!name.value) return alert("이름을 입력해주세요");
@@ -38,6 +40,11 @@ function registerc() {
         email : email.value
     };
     
+    if (!isVerified) {
+        alert("전화번호 인증을 완료해주세요.");
+        return false; // 인증이 완료되지 않으면 회원가입 요청을 막음
+    }
+
     fetch("/registerc", {
         method: "POST",
         headers: {
@@ -101,6 +108,7 @@ function submitCode() {
         if (res.success) {
             alert("인증이 완료되었습니다.");
             hideVerificationElements();
+            isVerified = true;
         } else {
             alert(res.msg);
         }
