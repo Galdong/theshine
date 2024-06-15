@@ -1,0 +1,42 @@
+<div class="container">
+    <h1 class="centered">문화예술교육 게시글 목록</h1>
+    <div class="search-container with-write-button">
+        <div class="search-elements">
+            <select id="searchField">
+                <option value="0">제목</option>
+                <option value="1">강사명</option>
+                <option value="2">카테고리</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="검색어를 입력해주세요.">
+            <button id="search">검색</button>
+        </div>
+        <button id="write" class="write-button">글쓰기</button>
+    </div>
+    <table id="artlist">
+        <tr>
+            <th>제목</th>
+            <th>강사명</th>
+            <th>카테고리</th>
+            <th>모집상태</th>
+            <th>작성일</th>
+            <th>가격</th>
+        </tr>
+        <% for (let i = 0; i < length; i++) { %>
+        <tr>
+            <td class="list-title"><a href="/admin/artview/<%= data[i].postID %>"><%= data[i].title %></a></td>
+            <td><%= data[i].instructorName %></td>
+            <td><%= data[i].category %></td>
+            <td>
+                <% if (data[i].status == 'ing') { %>
+                접수중
+                <% } else if (data[i].status == 'end') { %>
+                접수마감
+                <% } %>
+            </td>
+            <td><%= data[i].postDate %></td>
+            <td><%= data[i].price %></td>
+        </tr>
+        <% } %>
+    </table>
+</div>
+<script src="/js/admin/adminartlist.js"></script>

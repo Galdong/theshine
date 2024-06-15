@@ -3,6 +3,7 @@ const crypto = require("../home/crypto");
 const adminAccount = require("../../config/admin");
 const util = require('util');
 const sendMessage = require('../../config/message');
+const { deleteFileFromS3 } = require('../../config/multer');
 
 const output = {
     getAdmin: (req, res) => {
@@ -106,6 +107,75 @@ const output = {
                });
         });
     },
+    getArtlist: (req, res) => {
+        const query = "SELECT * FROM CulturalArtEdu ORDER BY postDate DESC";
+        db.query(query, (err, result) => {
+            if (err) console.log(err);
+            if (result) res.render("admin/adminList", {
+                'data': result,
+                'length': result.length,
+                content : 'adminArtList'
+            });
+        });
+    },
+    getProlist: (req, res) => {
+        const query = "SELECT * FROM ProfessionalEdu ORDER BY postDate DESC";
+        db.query(query, (err, result) => {
+            if (err) console.log(err);
+            if (result) res.render("admin/adminList", {
+                'data': result,
+                'length': result.length,
+                content : 'adminProList'
+            });
+        });
+    },
+    getArtview: (req, res) => {
+        const postID = req.params.postID;
+        const query1 = "SELECT COUNT(*) AS applyNum FROM artapply WHERE postID = ?;";
+        db.query(query1, [postID], (error, results) => {
+            if (error) throw error;
+            let applyNum = results[0].applyNum;
+            if (applyNum === null) {
+                applyNum = 0;
+            }
+            const query2 = "SELECT * FROM CulturalArtEdu WHERE postID=? ORDER BY postDate DESC;";
+            db.query(query2, [postID], (err, result) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    'data': result,
+                    'imageNum':JSON.parse(result[0].filename).length,
+                    'image':JSON.parse(result[0].filename),
+                    content : 'adminArtView',
+                    applyNum
+                });
+            });
+        });
+    },
+    getProview: (req, res) => {
+        const postID = req.params.postID;
+        const query1 = "SELECT COUNT(*) AS applyNum FROM proapply WHERE postID = ?;";
+        db.query(query1, [postID], (error, results) => {
+            if (error) throw error;
+            let applyNum = results[0].applyNum;
+            if (applyNum === null) {
+                applyNum = 0;
+            }
+            const query2 = "SELECT * FROM ProfessionalEdu WHERE postID=? ORDER BY postDate DESC;";
+            db.query(query2, [postID], (err, result) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    'data': result,
+                    'imageNum':JSON.parse(result[0].filename).length,
+                    'image':JSON.parse(result[0].filename),
+                    content : 'adminProView',
+                    applyNum
+                });
+            });
+        });
+    },
+    getArtWrite: (req, res) => {
+        res.render("admin/adminList", { content: 'adminArtWrite'});
+    }
 }
 
 const process = {
@@ -219,6 +289,79 @@ const process = {
         const applydate = req.body.applydate;
         const query = "DELETE FROM proapply WHERE title=? AND id=? AND applydate=?;";
         db.query(query, [title, id, applydate], (err, result) => {
+            if (err) return console.log(err);
+            if (result) res.json({success: true});
+        });
+    },
+    deleteArtPost: (req, res) => {
+        const postID = req.params.postID;
+        const query1 = "SELECT * FROM CulturalArtEdu WHERE postID = ?";
+        db.query(query1, [postID], (err, result) => {
+            if (err) console.log(err);
+            if (result) {
+                const filename = JSON.parse(result[0].filename);
+                const fileNum = filename.length;
+                for (i=0; i<fileNum; i++) {
+                    const key = filename[i];
+                    deleteFileFromS3(key);
+                }
+                const query2 = "DELETE FROM CulturalArtEdu WHERE postID = ?;";
+                db.query(query2, [postID], (err, result) => {
+                    if (err) return console.log(err);
+                    if (result) res.json({success: true});
+                });
+            }
+        }); 
+    },
+    deleteProPost: (req, res) => {
+        const postID = req.params.postID;
+        const query1 = "SELECT * FROM ProfessionalEdu WHERE postID = ?";
+        db.query(query1, [postID], (err, result) => {
+            if (err) console.log(err);
+            if (result) {
+                const filename = JSON.parse(result[0].filename);
+                const fileNum = filename.length;
+                for (i=0; i<fileNum; i++) {
+                    const key = filename[i];
+                    deleteFileFromS3(key);
+                }
+                const query2 = "DELETE FROM ProfessionalEdu WHERE postID = ?;";
+                db.query(query2, [postID], (err, result) => {
+                    if (err) return console.log(err);
+                    if (result) res.json({success: true});
+                });
+            }
+        }); 
+    },
+    ArtWrite: (req, res) => {
+        const data = req.body;
+        let images = [];
+        for (var i=0; i < req.files.length; i++) {
+            images.push(req.files[i].key.split('/').pop());
+        }
+        const image = JSON.stringify(images);
+        let imagesOriginalName = [];
+        for (var i=0; i < req.files.length; i++) {
+            imagesOriginalName.push(req.files[i].originalname);
+        }
+        const imageOriginalName = JSON.stringify(imagesOriginalName);
+        const postDate = new Date();
+        const query = "INSERT INTO CulturalArtEdu (title, content, nickname, instructorName, category, eduPeriod, recruitNum, receptionPeriod, status, postDate, filename, fileOriginalName, price) values (?, ?, '관리자', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        const dbdata = [
+            data.title,
+            data.content,
+            data.instructorName,
+            data.category,
+            data.eduPeriod,
+            data.recruitNum,
+            data.receptionPeriod,
+            data.status,
+            postDate,
+            image,
+            imageOriginalName,
+            data.price
+        ];
+        db.query(query, dbdata, (err, result) => {
             if (err) return console.log(err);
             if (result) res.json({success: true});
         });

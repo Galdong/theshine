@@ -49,6 +49,9 @@ body {
     overflow: auto;
 }
 
+.content-text {
+    white-space: pre-wrap;
+}
 .content h2 {
     color: #333;
     margin-bottom: 20px;
@@ -106,6 +109,14 @@ th {
     color: #fff;
 }
 
+td.list-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+    max-width: 150px;
+    display: block;
+}
+
 tr:nth-child(even) {
     background-color: #f4f4f9;
 }
@@ -140,7 +151,16 @@ button:hover, #search:hover {
 
 .search-container {
     display: flex;
+    align-items: center;
     margin-bottom: 20px;
+}
+
+.search-container.with-write-button {
+    justify-content: space-between; 
+}
+
+.search-elements {
+    display: flex;
 }
 
 #searchField, #searchInput {
@@ -325,5 +345,165 @@ textarea {
 }
 
 .btn:hover {
+    background-color: #777;
+}
+
+.post-details {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.post-details .title {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.post-details .meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+.post-details .content p {
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.post-details .image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.post-details .image-preview img {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.post-details .details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.post-details .detail-item {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex: 1 1 calc(50% - 20px);
+    box-sizing: border-box;
+}
+
+.post-details .detail-item p {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.post-details .detail-item span {
+    font-weight: bold;
+    color: #555;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.button-group .list-button {
+    background-color: #666;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-group .list-button:hover {
+    background-color: #555;
+}
+
+.button-group .delete-button {
+    background-color: #c0392b;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-group .delete-button:hover {
+    background-color: #a83228;
+}
+
+.write-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.write-centered {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.write-form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.write-form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.write-form-group input, .write-form-group textarea, .write-form-group select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.write-form-group input[type="file"] {
+    padding: 5px;
+}
+
+.write-form-group.centered {
+    text-align: center;
+}
+
+.write-form-group.centered button {
+    background-color: #666;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.write-form-group.centered button:hover {
     background-color: #777;
 }

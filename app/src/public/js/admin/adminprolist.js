@@ -1,51 +1,11 @@
-const changeBtn = document.querySelectorAll('#change');
 const searchBtn = document.querySelector('#search');
-const deleteBtn = document.querySelectorAll('#delete');
 
-changeBtn.forEach(function (button) {
-    button.addEventListener("click", function() {
-        const title = button.closest('tr').querySelector('.title').textContent;
-        const id = button.closest('tr').querySelector('.id').textContent;
-        const applydate = button.closest('tr').querySelector('.applydate').textContent;
-        const response = confirm("신청현황을 변경하시겠습니까?");
-        if (response) {
-            change(title, id, applydate);
-        } else {
-        }
-    });
-});
-
-function change(title, id, applydate) {
-    fetch("/admin/proapplylist/change", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            'title': title,
-            'id': id,
-            'applydate': applydate
-        })
-    })
-    .then((res)=>res.json())
-    .then((res) => {
-        if (res.success) {
-            alert("변경되었습니다.");
-            location.href = "/admin/proapplylist";
-        } else {
-            alert(res.msg);
-        }
-    })
-    .catch((err) => {
-        console.error("신청현황 변경 중 오류 발생");
-    })
-}
 searchBtn.addEventListener("click", search);
 
 function search() {
     const input = document.querySelector('#searchInput').value.toUpperCase();
     const filter = document.querySelector('#searchField').value;
-    const table = document.querySelector('#proapply');
+    const table = document.querySelector('#prolist');
     const tr = table.getElementsByTagName("tr");
     
     let resultFound = false;
@@ -78,7 +38,7 @@ function search() {
                 newCell.colSpan = tr[0].getElementsByTagName("th").length;
                 newCell.textContent = '검색어와 일치하는 결과가 없습니다.';
                 newCell.style.textAlign = 'center';
-            }
+                }
         } else {
             const messageRow = table.querySelector('tr.message');
             if (messageRow) {
@@ -91,47 +51,8 @@ function search() {
         }
         const allBtn = document.createElement('button');
         allBtn.classList.add('allbutton');
-        allBtn.innerHTML = '<a href="/admin/proapplylist">전체보기</a>';
+        allBtn.innerHTML = '<a href="/admin/prolist">전체보기</a>';
         const buttonContainer = document.querySelector('.container');
         buttonContainer.appendChild(allBtn);
     }
-}
-
-deleteBtn.forEach(function (button) {
-    button.addEventListener("click", function() {
-        const title = button.closest('tr').querySelector('.title').textContent;
-        const id = button.closest('tr').querySelector('.id').textContent;
-        const applydate = button.closest('tr').querySelector('.applydate').textContent;
-        const response = confirm("정말로 신청내역을 삭제하시겠습니까?");
-        if (response) {
-            deleteApply(title, id, applydate);
-        } else {
-        }
-    });
-});
-
-function deleteApply(title, id, applydate) {
-    fetch("/admin/proapplylist/delete", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            'title': title,
-            'id': id,
-            'applydate': applydate
-        })
-    })
-    .then((res)=>res.json())
-    .then((res) => {
-        if (res.success) {
-            alert("삭제되었습니다.");
-            location.href = "/admin/proapplylist";
-        } else {
-            alert(res.msg);
-        }
-    })
-    .catch((err) => {
-        console.error("신청내역 삭제 중 오류 발생");
-    })
 }

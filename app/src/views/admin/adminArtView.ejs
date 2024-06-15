@@ -1,0 +1,68 @@
+<div class="post-details">
+    <h1 class="title">제목: <%= data[0].title %></h1>
+    <div class="meta">
+        <span class="author">작성자: <%= data[0].nickname %></span>
+        <span class="date">작성일: <%= data[0].postDate %></span>
+    </div>
+    <div class="content">
+        <div class="content-text"><p><%= data[0].content %></p></div>
+        <div class="image-preview">
+            <% for (let i=0; i < imageNum; i++) { %>
+                <img src="https://s3-ap-northeast-2.amazonaws.com/challengeplus-images/images/<%= image[i] %>" alt="Image <%= i + 1 %>" height="500" width="500">
+            <% } %>
+        </div>
+    </div>
+    <div class="details">
+        <div class="detail-item">
+            <p>강사이름: <span><%= data[0].instructorName %></span></p>
+        </div>
+        <div class="detail-item">
+            <p>카테고리: 
+                <span>
+                <% if (data[0].category == 'humanities') { %> 
+                    인문학 
+                <% } else if (data[0].category == 'music') { %> 
+                    음악 
+                <% } else if (data[0].category == 'art') { %> 
+                    미술
+                <% } else if (data[0].category == 'sports') { %> 
+                    운동 
+                <% } else if (data[0].category == 'show') { %> 
+                    공연    
+                <% } %>
+                </span>
+            </p>
+        </div>
+        <div class="detail-item">
+            <p>교육기간: <span><%= data[0].eduPeriod %></span></p>
+        </div>
+        <div class="detail-item">
+            <p>모집인원: <span><%= data[0].recruitNum %> 명</span></p>
+        </div>
+        <div class="detail-item">
+            <p>접수기간: <span><%= data[0].receptionPeriod %></span></p>
+        </div>
+        <div class="detail-item">
+            <p>모집상태: 
+                <span>
+                <% if (data[0].status == 'ing') { %> 
+                접수중 
+                <% } else if (data[0].status == 'end') { %> 
+                접수마감 
+                <% } %>
+                </span>
+            </p>
+        </div>
+        <div class="detail-item">
+            <p>가격: <span><%= data[0].price %>원</span></p>
+        </div>
+        <div class="detail-item">
+            <p>신청자 수: <span><%= applyNum %> 명</span></p>
+        </div>
+    </div>
+    <div class="button-group">
+        <button class="list-button">목록</button>
+        <button class="delete-button">삭제</button>
+    </div>
+</div>
+<script src="/js/admin/adminartview.js"></script>
