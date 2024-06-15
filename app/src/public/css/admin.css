@@ -520,3 +520,13 @@ textarea {
 .date-inputs span {
     margin: 0 5px;
 }
+
+.page {
+    display: flex;
+    list-style-type: none;
+    justify-content: center;
+}
+.page li {
+    margin: 0 5px;
+    cursor: pointer;
+}

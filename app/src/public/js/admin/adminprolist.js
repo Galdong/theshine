@@ -56,3 +56,51 @@ function search() {
         buttonContainer.appendChild(allBtn);
     }
 }
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const container = document.querySelector('.container');
+    const currentPage = parseInt(container.getAttribute('data-current-page'));
+    const totalPages = parseInt(container.getAttribute('data-total-pages'));
+
+    function renderPage(currentPage, totalPages) {
+        const pageUl = document.getElementById('page');
+        pageUl.innerHTML = '';
+
+        const pagesPerGroup = 5;
+        const currentGroup = Math.ceil(currentPage / pagesPerGroup);
+        const startPage = (currentGroup - 1) * pagesPerGroup + 1;
+        const endPage = Math.min(startPage + pagesPerGroup - 1, totalPages);
+
+        if (currentGroup > 1) {
+            const prevGroupLi = document.createElement('li');
+            prevGroupLi.textContent = '이전';
+            prevGroupLi.addEventListener('click', () => {
+                window.location.href = `/admin/prolist?page=${startPage - pagesPerGroup}`;
+            });
+            pageUl.appendChild(prevGroupLi);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const li = document.createElement('li');
+            li.textContent = i;
+            if (i === currentPage) {
+                li.style.fontWeight = 'bold';
+            }
+            li.addEventListener('click', () => {
+                window.location.href = `/admin/prolist?page=${i}`;
+            });
+            pageUl.appendChild(li);
+        }
+
+        if (endPage < totalPages) {
+            const nextGroupLi = document.createElement('li');
+            nextGroupLi.textContent = '다음';
+            nextGroupLi.addEventListener('click', () => {
+                window.location.href = `/admin/prolist?page=${startPage + pagesPerGroup}`;
+            });
+            pageUl.appendChild(nextGroupLi);
+        }
+    }
+
+    renderPage(currentPage, totalPages);
+});

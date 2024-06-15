@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" data-current-page="<%= currentPage %>" data-total-pages="<%= totalPages %>">
     <h1 class="centered">전문교육 게시글 목록</h1>
     <div class="search-container with-write-button">
         <div class="search-elements">
@@ -38,5 +38,6 @@
         </tr>
         <% } %>
     </table>
+    <ul id="page" class="page"></ul>
 </div>
 <script src="/js/admin/adminprolist.js"></script>

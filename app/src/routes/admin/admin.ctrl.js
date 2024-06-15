@@ -55,46 +55,94 @@ const output = {
         })
     },
     getArtApplylist: (req, res) => {
-        const query = "SELECT * FROM artapply ORDER BY applydate DESC";
-        db.query(query, (err, result) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 15;
+        const offset = (page - 1) * limit;
+
+        const totalQuery = "SELECT COUNT(*) as total FROM artapply";
+        db.query(totalQuery, (err, totalResult) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminList", {
-                'data': result,
-                'length': result.length,
-                content : 'adminArtApplylist'
+            const totalCount = totalResult[0].total;
+            const totalPages = Math.ceil(totalCount / limit);
+            const query = "SELECT * FROM artapply ORDER BY applydate DESC LIMIT ? OFFSET ?";
+            db.query(query, [limit, offset], (err, result) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    data: result,
+                    length: result.length,
+                    currentPage: page,
+                    totalPages: totalPages,
+                    content: 'adminArtApplyList'
+                });
             });
         });
     },
     getProApplylist: (req, res) => {
-        const query = "SELECT * FROM proapply ORDER BY applydate DESC";
-        db.query(query, (err, result) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 15;
+        const offset = (page - 1) * limit;
+
+        const totalQuery = "SELECT COUNT(*) as total FROM proapply";
+        db.query(totalQuery, (err, totalResult) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminList", {
-                'data': result,
-                'length': result.length,
-                content : 'adminProApplylist'
+            const totalCount = totalResult[0].total;
+            const totalPages = Math.ceil(totalCount / limit);
+            const query = "SELECT * FROM proapply ORDER BY applydate DESC LIMIT ? OFFSET ?";
+            db.query(query, [limit, offset], (err, result) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    data: result,
+                    length: result.length,
+                    currentPage: page,
+                    totalPages: totalPages,
+                    content: 'adminProApplyList'
+                });
             });
         });
     },
     getUsers: (req, res) => {
-        const query = "SELECT id, name, mphone, joinDate, nickname FROM users WHERE category='user' ORDER BY joinDate DESC;";
-        db.query(query, (err, result) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 15;
+        const offset = (page - 1) * limit;
+
+        const totalQuery = "SELECT COUNT(*) as total FROM users WHERE category='user'";
+        db.query(totalQuery, (err, totalResult) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminList", {
-                'data': result,
-                'length': result.length,
-                content : 'adminUsers'
+            const totalCount = totalResult[0].total;
+            const totalPages = Math.ceil(totalCount / limit);
+            const query = "SELECT * FROM users WHERE category='user' ORDER BY joinDate DESC LIMIT ? OFFSET ?";
+            db.query(query, [limit, offset], (err, result) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    data: result,
+                    length: result.length,
+                    currentPage: page,
+                    totalPages: totalPages,
+                    content: 'adminUsers'
+                });
             });
         });
     },
     getInstructors: (req, res) => {
-        const query = "SELECT id, name, mphone, joinDate, nickname FROM users WHERE category='instructor' ORDER BY joinDate DESC;";
-        db.query(query, (err, result) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 15;
+        const offset = (page - 1) * limit;
+
+        const totalQuery = "SELECT COUNT(*) as total FROM users WHERE category='instructor'";
+        db.query(totalQuery, (err, totalResult) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminList", {
-                'data': result,
-                'length': result.length,
-                content : 'adminInstructors'
+            const totalCount = totalResult[0].total;
+            const totalPages = Math.ceil(totalCount / limit);
+            const query = "SELECT * FROM users WHERE category='instructor' ORDER BY joinDate DESC LIMIT ? OFFSET ?";
+            db.query(query, [limit, offset], (err, result) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    data: result,
+                    length: result.length,
+                    currentPage: page,
+                    totalPages: totalPages,
+                    content: 'adminInstructors'
+                });
             });
         });
     },
@@ -108,24 +156,48 @@ const output = {
         });
     },
     getArtlist: (req, res) => {
-        const query = "SELECT * FROM CulturalArtEdu ORDER BY postDate DESC";
-        db.query(query, (err, result) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 15;
+        const offset = (page - 1) * limit;
+
+        const totalQuery = "SELECT COUNT(*) as total FROM CulturalArtEdu";
+        db.query(totalQuery, (err, totalResult) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminList", {
-                'data': result,
-                'length': result.length,
-                content : 'adminArtList'
+            const totalCount = totalResult[0].total;
+            const totalPages = Math.ceil(totalCount / limit);
+            const query = "SELECT * FROM CulturalArtEdu ORDER BY postDate DESC LIMIT ? OFFSET ?";
+            db.query(query, [limit, offset], (err, result) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    data: result,
+                    length: result.length,
+                    currentPage: page,
+                    totalPages: totalPages,
+                    content: 'adminArtList'
+                });
             });
         });
     },
     getProlist: (req, res) => {
-        const query = "SELECT * FROM ProfessionalEdu ORDER BY postDate DESC";
-        db.query(query, (err, result) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 15;
+        const offset = (page - 1) * limit;
+
+        const totalQuery = "SELECT COUNT(*) as total FROM ProfessionalEdu";
+        db.query(totalQuery, (err, totalResult) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminList", {
-                'data': result,
-                'length': result.length,
-                content : 'adminProList'
+            const totalCount = totalResult[0].total;
+            const totalPages = Math.ceil(totalCount / limit);
+            const query = "SELECT * FROM ProfessionalEdu ORDER BY postDate DESC LIMIT ? OFFSET ?";
+            db.query(query, [limit, offset], (err, result) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    data: result,
+                    length: result.length,
+                    currentPage: page,
+                    totalPages: totalPages,
+                    content: 'adminProList'
+                });
             });
         });
     },
