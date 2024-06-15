@@ -507,3 +507,16 @@ textarea {
 .write-form-group.centered button:hover {
     background-color: #777;
 }
+
+.date-inputs {
+    display: flex;
+    align-items: center;
+}
+
+.date-inputs input {
+    margin: 0 5px;
+}
+
+.date-inputs span {
+    margin: 0 5px;
+}
