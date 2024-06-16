@@ -72,14 +72,14 @@ writeBtn.addEventListener("click", (e) => {
 });
 
 function post(data) {
-    fetch("/admin/art/write", {
+    fetch("/admin/pro/write", {
         method: "POST",
         body: data,
     })
     .then((res) => res.json())
     .then((res) => { 
         if (res.success) {
-            location.href = "/admin/artlist"; 
+            location.href = "/admin/prolist"; 
         } else {
             alert(res.msg);
         }

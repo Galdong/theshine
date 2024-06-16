@@ -3,9 +3,9 @@
     <div class="search-container with-write-button">
         <div class="search-elements">
             <select id="searchField">
-                <option value="0">제목</option>
-                <option value="1">강사명</option>
-                <option value="2">카테고리</option>
+                <option value="title">제목</option>
+                <option value="instructorName">강사명</option>
+                <option value="category">카테고리</option>
             </select>
             <input type="text" id="searchInput" placeholder="검색어를 입력해주세요.">
             <button id="search">검색</button>
@@ -23,14 +23,14 @@
         </tr>
         <% for (let i = 0; i < length; i++) { %>
         <tr>
-            <td><a href="/admin/proview/<%= data[i].postID %>"><%= data[i].title %></a></td>
+            <td class="list-title"><a href="/admin/proview/<%= data[i].postID %>"><%= data[i].title %></a></td>
             <td><%= data[i].instructorName %></td>
             <td><%= data[i].category %></td>
             <td>
                 <% if (data[i].status == 'ing') { %>
-                모집중
+                접수중
                 <% } else if (data[i].status == 'end') { %>
-                모집마감
+                접수마감
                 <% } %>
             </td>
             <td><%= data[i].postDate %></td>

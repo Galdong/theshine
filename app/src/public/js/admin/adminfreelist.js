@@ -12,7 +12,7 @@ function search() {
         alert("검색어를 입력해주세요");
         return;
     }
-    fetch(`/admin/prolist/search?keyword=${input}&filter=${filter}`)
+    fetch(`/admin/freelist/search?keyword=${input}&filter=${filter}`)
         .then(response => response.json())
         .then(data => {
             renderSearchResult(data);
@@ -23,7 +23,7 @@ function search() {
 }
 
 function renderSearchResult(data) {
-    const table = document.querySelector('#prolist');
+    const table = document.querySelector('#freelist');
     const tr = table.getElementsByTagName("tr");
 
     for (let i = 1; i < tr.length; i++) {
@@ -40,12 +40,10 @@ function renderSearchResult(data) {
         data.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td class="list-title"><a href="/admin/proview/${item.postID}">${item.title}</a></td>
-                <td>${item.instructorName}</td>
-                <td>${item.category}</td>
-                <td>${item.status}</td>
+                <td class="list-title"><a href="/admin/freeview/${item.postID}">${item.title}</a></td>
+                <td class="list-content">${item.content}</td>
+                <td>${item.nickname}</td>
                 <td>${item.postDate}</td>
-                <td>${item.price}</td>
             `;
             table.appendChild(row);
         });
@@ -58,12 +56,11 @@ function renderSearchResult(data) {
             newCell.colSpan = tr[0].getElementsByTagName("th").length;
             newCell.textContent = '검색어와 일치하는 결과가 없습니다.';
             newCell.style.textAlign = 'center';
-            pageUl.style.display = 'none';
         }
     }
     const allBtn = document.createElement('button');
     allBtn.classList.add('allbutton');
-    allBtn.innerHTML = '<a href="/admin/prolist">전체보기</a>';
+    allBtn.innerHTML = '<a href="/admin/freelist">전체보기</a>';
 
     allBtn.style.display = 'block';
     allBtn.style.margin = '10px auto';
@@ -75,7 +72,7 @@ function renderSearchResult(data) {
     
 
 function writePost() {
-    location.href = "/admin/pro/write";
+    location.href = "/admin/free/write";
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
@@ -96,7 +93,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const prevGroupLi = document.createElement('li');
             prevGroupLi.textContent = '이전';
             prevGroupLi.addEventListener('click', () => {
-                window.location.href = `/admin/prolist?page=${startPage - pagesPerGroup}`;
+                window.location.href = `/admin/freelist?page=${startPage - pagesPerGroup}`;
             });
             pageUl.appendChild(prevGroupLi);
         }
@@ -108,7 +105,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 li.style.fontWeight = 'bold';
             }
             li.addEventListener('click', () => {
-                window.location.href = `/admin/prolist?page=${i}`;
+                window.location.href = `/admin/freelist?page=${i}`;
             });
             pageUl.appendChild(li);
         }
@@ -117,7 +114,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const nextGroupLi = document.createElement('li');
             nextGroupLi.textContent = '다음';
             nextGroupLi.addEventListener('click', () => {
-                window.location.href = `/admin/prolist?page=${startPage + pagesPerGroup}`;
+                window.location.href = `/admin/freelist?page=${startPage + pagesPerGroup}`;
             });
             pageUl.appendChild(nextGroupLi);
         }

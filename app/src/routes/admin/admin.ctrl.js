@@ -247,7 +247,148 @@ const output = {
     },
     getArtWrite: (req, res) => {
         res.render("admin/adminList", { content: 'adminArtWrite'});
-    }
+    },
+    getProWrite: (req, res) => {
+        res.render("admin/adminList", { content: 'adminProWrite'});
+    },
+    getArtSearch: (req, res) => {
+        const keyword = req.query.keyword.toUpperCase();
+        const filter = req.query.filter;
+
+        const query = "SELECT * FROM CulturalArtEdu";
+        db.query(query, (err, data) => {
+            if (err) console.log(err);
+            if (data) {
+                const result = data.filter(item => {
+                    return item[filter].toUpperCase().includes(keyword);
+                });
+                res.json(result);
+            }
+        });
+    },
+    getProSearch: (req, res) => {
+        const keyword = req.query.keyword.toUpperCase();
+        const filter = req.query.filter;
+
+        const query = "SELECT * FROM ProfessionalEdu";
+        db.query(query, (err, data) => {
+            if (err) console.log(err);
+            if (data) {
+                const result = data.filter(item => {
+                    return item[filter].toUpperCase().includes(keyword);
+                });
+                res.json(result);
+            }
+        });
+    },
+    getFreelist: (req, res) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 15;
+        const offset = (page - 1) * limit;
+
+        const totalQuery = "SELECT COUNT(*) as total FROM freeboard";
+        db.query(totalQuery, (err, totalResult) => {
+            if (err) console.log(err);
+            const totalCount = totalResult[0].total;
+            const totalPages = Math.ceil(totalCount / limit);
+            const query = "SELECT * FROM freeboard ORDER BY postDate DESC LIMIT ? OFFSET ?";
+            db.query(query, [limit, offset], (err, result) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    data: result,
+                    length: result.length,
+                    currentPage: page,
+                    totalPages: totalPages,
+                    content: 'adminFreeList'
+                });
+            });
+        });
+    },
+    getFreeview: (req, res) => {
+        const postID = req.params.postID;
+        const query = "SELECT * FROM freeboard WHERE postID=? ORDER BY postDate DESC;";
+        db.query(query, [postID], (err, result) => {
+            if (err) console.log(err);
+            if (result) res.render("admin/adminList", {
+                'data': result,
+                'imageNum':JSON.parse(result[0].filename).length,
+                'image':JSON.parse(result[0].filename),
+                content : 'adminFreeView'
+            });
+        });
+    },
+    getFreeWrite: (req, res) => {
+        res.render("admin/adminList", { content: 'adminFreeWrite'});
+    },
+    getFreeSearch: (req, res) => {
+        const keyword = req.query.keyword.toUpperCase();
+        const filter = req.query.filter;
+
+        const query = "SELECT * FROM freeboard";
+        db.query(query, (err, data) => {
+            if (err) console.log(err);
+            if (data) {
+                const result = data.filter(item => {
+                    return item[filter].toUpperCase().includes(keyword);
+                });
+                res.json(result);
+            }
+        });
+    },
+    getClublist: (req, res) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 15;
+        const offset = (page - 1) * limit;
+
+        const totalQuery = "SELECT COUNT(*) as total FROM clubboard";
+        db.query(totalQuery, (err, totalResult) => {
+            if (err) console.log(err);
+            const totalCount = totalResult[0].total;
+            const totalPages = Math.ceil(totalCount / limit);
+            const query = "SELECT * FROM clubboard ORDER BY postDate DESC LIMIT ? OFFSET ?";
+            db.query(query, [limit, offset], (err, result) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    data: result,
+                    length: result.length,
+                    currentPage: page,
+                    totalPages: totalPages,
+                    content: 'adminClubList'
+                });
+            });
+        });
+    },
+    getClubview: (req, res) => {
+        const postID = req.params.postID;
+        const query = "SELECT * FROM clubboard WHERE postID=? ORDER BY postDate DESC;";
+        db.query(query, [postID], (err, result) => {
+            if (err) console.log(err);
+            if (result) res.render("admin/adminList", {
+                'data': result,
+                'imageNum':JSON.parse(result[0].filename).length,
+                'image':JSON.parse(result[0].filename),
+                content : 'adminClubView'
+            });
+        });
+    },
+    getClubWrite: (req, res) => {
+        res.render("admin/adminList", { content: 'adminClubWrite'});
+    },
+    getClubSearch: (req, res) => {
+        const keyword = req.query.keyword.toUpperCase();
+        const filter = req.query.filter;
+
+        const query = "SELECT * FROM clubboard";
+        db.query(query, (err, data) => {
+            if (err) console.log(err);
+            if (data) {
+                const result = data.filter(item => {
+                    return item[filter].toUpperCase().includes(keyword);
+                });
+                res.json(result);
+            }
+        });
+    },
 }
 
 const process = {
@@ -432,6 +573,131 @@ const process = {
             image,
             imageOriginalName,
             data.price
+        ];
+        db.query(query, dbdata, (err, result) => {
+            if (err) return console.log(err);
+            if (result) res.json({success: true});
+        });
+    },
+    ProWrite: (req, res) => {
+        const data = req.body;
+        let images = [];
+        for (var i=0; i < req.files.length; i++) {
+            images.push(req.files[i].key.split('/').pop());
+        }
+        const image = JSON.stringify(images);
+        let imagesOriginalName = [];
+        for (var i=0; i < req.files.length; i++) {
+            imagesOriginalName.push(req.files[i].originalname);
+        }
+        const imageOriginalName = JSON.stringify(imagesOriginalName);
+        const postDate = new Date();
+        const query = "INSERT INTO ProfessionalEdu (title, content, nickname, instructorName, category, eduPeriod, recruitNum, receptionPeriod, status, postDate, filename, fileOriginalName, price) values (?, ?, '관리자', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        const dbdata = [
+            data.title,
+            data.content,
+            data.instructorName,
+            data.category,
+            data.eduPeriod,
+            data.recruitNum,
+            data.receptionPeriod,
+            data.status,
+            postDate,
+            image,
+            imageOriginalName,
+            data.price
+        ];
+        db.query(query, dbdata, (err, result) => {
+            if (err) return console.log(err);
+            if (result) res.json({success: true});
+        });
+    },
+    deleteFreePost: (req, res) => {
+        const postID = req.params.postID;
+        const query1 = "SELECT * FROM freeboard WHERE postID = ?";
+        db.query(query1, [postID], (err, result) => {
+            if (err) console.log(err);
+            if (result) {
+                const filename = JSON.parse(result[0].filename);
+                const fileNum = filename.length;
+                for (i=0; i<fileNum; i++) {
+                    const key = filename[i];
+                    deleteFileFromS3(key);
+                }
+                const query2 = "DELETE FROM freeboard WHERE postID = ?;";
+                db.query(query2, [postID], (err, result) => {
+                    if (err) return console.log(err);
+                    if (result) res.json({success: true});
+                });
+            }
+        }); 
+    },
+    FreeWrite: (req, res) => {
+        const data = req.body;
+        let images = [];
+        for (let i=0; i < req.files.length; i++) {
+            images.push(req.files[i].key.split('/').pop());
+        }
+        const image = JSON.stringify(images);
+        let imagesOriginalName = [];
+        for (let i=0; i < req.files.length; i++) {
+            imagesOriginalName.push(req.files[i].originalname);
+        }
+        const imageOriginalName = JSON.stringify(imagesOriginalName);
+        const postDate = new Date();
+        const query = "INSERT INTO freeboard (title, content, nickname, postDate, filename, fileOriginalName) values (?, ?, '관리자', ?, ?, ?);";
+        const dbdata = [
+            data.title,
+            data.content,
+            postDate,
+            image,
+            imageOriginalName
+        ];
+        db.query(query, dbdata, (err, result) => {
+            if (err) return console.log(err);
+            if (result) res.json({success: true});
+        });
+    },
+    deleteClubPost: (req, res) => {
+        const postID = req.params.postID;
+        const query1 = "SELECT * FROM clubboard WHERE postID = ?";
+        db.query(query1, [postID], (err, result) => {
+            if (err) console.log(err);
+            if (result) {
+                const filename = JSON.parse(result[0].filename);
+                const fileNum = filename.length;
+                for (i=0; i<fileNum; i++) {
+                    const key = filename[i];
+                    deleteFileFromS3(key);
+                }
+                const query2 = "DELETE FROM clubboard WHERE postID = ?;";
+                db.query(query2, [postID], (err, result) => {
+                    if (err) return console.log(err);
+                    if (result) res.json({success: true});
+                });
+            }
+        }); 
+    },
+    ClubWrite: (req, res) => {
+        const data = req.body;
+        let images = [];
+        for (let i=0; i < req.files.length; i++) {
+            images.push(req.files[i].key.split('/').pop());
+        }
+        const image = JSON.stringify(images);
+        let imagesOriginalName = [];
+        for (let i=0; i < req.files.length; i++) {
+            imagesOriginalName.push(req.files[i].originalname);
+        }
+        const imageOriginalName = JSON.stringify(imagesOriginalName);
+        const postDate = new Date();
+        const query = "INSERT INTO clubboard (title, content, nickname, postDate, filename, fileOriginalName) values (?, ?, '관리자', ?, ?, ?);";
+        const dbdata = [
+            data.title,
+            data.content,
+            postDate,
+            image,
+            imageOriginalName
         ];
         db.query(query, dbdata, (err, result) => {
             if (err) return console.log(err);

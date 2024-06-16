@@ -1,0 +1,21 @@
+<div class="write-container">
+    <h1 class="write-centered">게시글 작성</h1>
+    <form id="writeForm" enctype="multipart/form-data">
+        <div class="write-form-group">
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="write-form-group">
+            <label for="content">내용</label>
+            <textarea id="content" name="content" rows="10" required></textarea>
+        </div>
+        <div class="write-form-group">
+            <label for="image">이미지</label>
+            <input id="image" name="image" type="file" multiple>
+        </div>
+        <div class="write-form-group centered">
+            <button id="write" class="btn">작성하기</button>
+        </div>
+    </form>
+</div>
+<script src="/js/admin/adminfreewrite.js"></script>

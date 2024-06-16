@@ -1,5 +1,5 @@
 <div class="container" data-current-page="<%= currentPage %>" data-total-pages="<%= totalPages %>">
-    <h1 class="centered">자유게시판 게시글 목록</h1>
+    <h1 class="centered">동호회게시판 게시글 목록</h1>
     <div class="search-container with-write-button">
         <div class="search-elements">
             <select id="searchField">
@@ -12,7 +12,7 @@
         </div>
         <button id="write" class="write-button">글쓰기</button>
     </div>
-    <table id="freelist">
+    <table id="clublist">
         <tr>
             <th>제목</th>
             <th>내용</th>
@@ -21,7 +21,7 @@
         </tr>
         <% for (let i = 0; i < length; i++) { %>
         <tr>
-            <td class="list-title"><a href="/admin/freeview/<%= data[i].postID %>"><%= data[i].title %></a></td>
+            <td class="list-title"><a href="/admin/clubview/<%= data[i].postID %>"><%= data[i].title %></a></td>
             <td class="list-content"><%= data[i].content %></td>
             <td><%= data[i].nickname %></td>
             <td><%= data[i].postDate %></td>
@@ -30,4 +30,4 @@
     </table>
     <ul id="page" class="page"></ul>
 </div>
-<script src="/js/admin/adminfreelist.js"></script>
+<script src="/js/admin/adminclublist.js"></script>

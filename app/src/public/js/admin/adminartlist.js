@@ -5,59 +5,74 @@ searchBtn.addEventListener("click", search);
 writeBtn.addEventListener("click", writePost);
 
 function search() {
-    const input = document.querySelector('#searchInput').value.toUpperCase();
+    const input = document.querySelector('#searchInput').value.trim();
     const filter = document.querySelector('#searchField').value;
-    const table = document.querySelector('#artlist');
-    const tr = table.getElementsByTagName("tr");
-    
-    let resultFound = false;
 
     if (!input) {
-        alert("검색어를 입력해주세요")
-    } else {
-        for (let i = 1; i < tr.length; i++) {
-            let td = tr[i].getElementsByTagName("td");
-            let count = 0;
-            for (let j = 0; j < td.length; j++) {
-                if (td[j]) {
-                    if (td[j].innerHTML.toUpperCase().indexOf(input) > -1 && j == filter) {
-                        tr[i].style.display = "";
-                        count++;
-                        resultFound = true;
-                        break;
-                    } else {
-                        tr[i].style.display = "none";
-                    }
-                }
-            }
-        }
-        if (!resultFound) {
-            const messageRow = table.querySelector('tr.message');
-            if (!messageRow) {
-                const newRow = table.insertRow(1);
-                newRow.classList.add('message');
-                const newCell = newRow.insertCell(0);
-                newCell.colSpan = tr[0].getElementsByTagName("th").length;
-                newCell.textContent = '검색어와 일치하는 결과가 없습니다.';
-                newCell.style.textAlign = 'center';
-                }
-        } else {
-            const messageRow = table.querySelector('tr.message');
-            if (messageRow) {
-                table.deleteRow(1);
-            }
-        }
-        const existBtn = document.querySelector('.allbutton');
-        if (existBtn) {
-            existBtn.remove();
-        }
-        const allBtn = document.createElement('button');
-        allBtn.classList.add('allbutton');
-        allBtn.innerHTML = '<a href="/admin/artlist">전체보기</a>';
-        const buttonContainer = document.querySelector('.container');
-        buttonContainer.appendChild(allBtn);
+        alert("검색어를 입력해주세요");
+        return;
     }
+    fetch(`/admin/artlist/search?keyword=${input}&filter=${filter}`)
+        .then(response => response.json())
+        .then(data => {
+            renderSearchResult(data);
+        })
+        .catch(error => {
+            console.error('검색 중 오류 발생:', error);
+        });
 }
+
+function renderSearchResult(data) {
+    const table = document.querySelector('#artlist');
+    const tr = table.getElementsByTagName("tr");
+
+    for (let i = 1; i < tr.length; i++) {
+        tr[i].style.display = "none";
+    }
+    const pageUl = document.getElementById('page');
+    pageUl.style.display = 'none';
+    const existBtn = document.querySelector('.allbutton');
+    if (existBtn) {
+        existBtn.remove();
+    }
+
+    if (data.length > 0) {
+        data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="list-title"><a href="/admin/artview/${item.postID}">${item.title}</a></td>
+                <td>${item.instructorName}</td>
+                <td>${item.category}</td>
+                <td>${item.status}</td>
+                <td>${item.postDate}</td>
+                <td>${item.price}</td>
+            `;
+            table.appendChild(row);
+        });
+    } else {
+        const messageRow = table.querySelector('tr.message');
+        if (!messageRow) {
+            const newRow = table.insertRow(1);
+            newRow.classList.add('message');
+            const newCell = newRow.insertCell(0);
+            newCell.colSpan = tr[0].getElementsByTagName("th").length;
+            newCell.textContent = '검색어와 일치하는 결과가 없습니다.';
+            newCell.style.textAlign = 'center';
+            pageUl.style.display = 'none';
+        }
+    }
+    const allBtn = document.createElement('button');
+    allBtn.classList.add('allbutton');
+    allBtn.innerHTML = '<a href="/admin/artlist">전체보기</a>';
+
+    allBtn.style.display = 'block';
+    allBtn.style.margin = '10px auto';
+    allBtn.style.textAlign = 'center';
+
+    const buttonContainer = document.querySelector('.container');
+    buttonContainer.appendChild(allBtn);
+}
+    
 
 function writePost() {
     location.href = "/admin/art/write";
