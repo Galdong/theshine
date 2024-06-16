@@ -13,14 +13,24 @@
                         <input type="checkbox" id="selectAll" name="selectAll">
                         <label for="selectAll">모두 선택</label>
                     </div>
-                    <div class="checkbox-list">
-                        <% for (let i = 0; i < users.length; i++) { %>
-                            <div class="checkbox-item">
-                                <input type="checkbox" class="userCheckbox" id="user<%= i %>" name="recipients" value="<%= users[i].id %>">
-                                <label for="user<%= i %>"><%= users[i].name %> (<%= users[i].id %>)</label>
-                            </div>
-                        <% } %>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="selectUsers" name="selectUsers">
+                        <label for="selectUsers">회원 선택</label>
                     </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="selectInstructors" name="selectInstructors">
+                        <label for="selectInstructors">강사 선택</label>
+                    </div>
+                </div>
+                <div class="checkbox-list">
+                    <% for (let i = 0; i < users.length; i++) { %>
+                        <div class="checkbox-item">
+                            <input type="checkbox" class="userCheckbox" id="user<%= i %>" name="recipients" value="<%= users[i].id %>" data-category="<%= users[i].category %>">
+                            <label for="user<%= i %>"><%= users[i].name %> (<%= users[i].id %>) -
+                                <% if (users[i].category == 'user') { %> 회원
+                                <% } else { %> 강사 <% } %> </label>
+                        </div>
+                    <% } %>
                 </div>
             </div>
             <div class="form-group centered">

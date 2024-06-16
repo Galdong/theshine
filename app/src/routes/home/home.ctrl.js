@@ -1,7 +1,7 @@
 const UserStorage = require("../../models/home/UserStorage");
 const auth = require("./auth");
 const crypto = require("./crypto");
-const sendMessage = require('../../config/message');
+const { sendMessage } = require('../../config/message');
 
 const output = {
     home: (req, res) => {

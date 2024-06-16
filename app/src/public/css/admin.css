@@ -269,15 +269,14 @@ textarea {
 
 .checkbox-group {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 10px 0;
+    align-items: center;
 }
 
 .checkbox-item {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
+    margin-right: 20px;
 }
 
 .checkbox-item input[type="checkbox"] {

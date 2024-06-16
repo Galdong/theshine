@@ -50,6 +50,7 @@ router.post("/freeview/delete/:postID", ctrl.session.sessionExpiration, ctrl.pro
 router.post("/free/write", ctrl.session.sessionExpiration, upload.array('image', 5), ctrl.process.FreeWrite);
 router.post("/clubview/delete/:postID", ctrl.session.sessionExpiration, ctrl.process.deleteClubPost);
 router.post("/club/write", ctrl.session.sessionExpiration, upload.array('image', 5), ctrl.process.ClubWrite);
+router.post("/message", ctrl.session.sessionExpiration, ctrl.process.sendMessages);
 // router.post("/picnicview/delete/:postID", ctrl.session.sessionExpiration, ctrl.process.deletePicnicPost);
 // router.post("/picnic/write", ctrl.session.sessionExpiration, upload.array('image', 5), ctrl.process.PicnicWrite);
 // router.post("/jobview/delete/:postID", ctrl.session.sessionExpiration, ctrl.process.deleteJobPost);

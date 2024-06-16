@@ -2,7 +2,7 @@ const db = require('../../config/db');
 const crypto = require("../home/crypto");
 const adminAccount = require("../../config/admin");
 const util = require('util');
-const sendMessage = require('../../config/message');
+const { sendMessage, sendLmsMessage } = require('../../config/message');
 const { deleteFileFromS3 } = require('../../config/multer');
 
 const output = {
@@ -703,8 +703,40 @@ const process = {
             if (err) return console.log(err);
             if (result) res.json({success: true});
         });
-    }
-    
+    },
+    sendMessages: async (req, res) => {
+        const content = req.body.message;
+        const receiver = req.body.receiver;
+
+        if (!content || !receiver || receiver.length === 0) {
+            return res.json({success: false, msg: "메시지와 수신자를 확인해 주세요."});
+        }
+
+        try {
+            const query = "SELECT mphone FROM users WHERE id IN (?)";
+            db.query(query, [receiver], async (err, result) => {
+                if (err) return console.log(err);
+                const mphones = result.map(receiver => receiver.mphone);
+                try {
+                    const sendPromises = mphones.map(to => {
+                        if (Buffer.byteLength(content, 'utf-8') > 90) {
+                            return sendLmsMessage(to, "[챌린지 플러스]", content);
+                        } else {
+                            return sendMessage(to, content);
+                        }
+                    });
+                    await Promise.all(sendPromises);
+                    res.json({success: true});
+                } catch (error) {
+                    console.log(error);
+                    res.json({success: false, msg: "메시지 전송에 실패했습니다."});
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            res.json({success: false, msg: "메시지 전송에 실패했습니다."});
+        }
+    },
 }
 
 const session = {
