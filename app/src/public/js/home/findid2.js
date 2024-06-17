@@ -6,7 +6,7 @@ verifyBtn.addEventListener("click", verify);
 function verify() {
     const verificationCode = document.querySelector('#verificationCode').value;
 
-    fetch("/findpw2", {
+    fetch("/findid2", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -17,7 +17,7 @@ function verify() {
     .then((res) => {
         if (res.success) {
             alert("인증 완료되었습니다.");
-            location.href = "/resetpw";
+            location.href = "/findid3";
         } else {
             alert(res.msg);
         }

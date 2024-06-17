@@ -2,6 +2,7 @@ const UserStorage = require("../../models/home/UserStorage");
 const auth = require("./auth");
 const crypto = require("./crypto");
 const { sendMessage } = require('../../config/message');
+const db = require("../../config/db");
 
 const output = {
     home: (req, res) => {
@@ -30,10 +31,28 @@ const output = {
     getVerify: (req, res) => {
         const mphone = req.session.mphone;
         res.render("home/verify", { mphone });
+    },
+    getFindID: (req, res) => {
+        res.render("home/findID")
+    },
+    getFindID2: (req, res) => {
+        const mphone = req.query.mphone;
+        res.render("home/findID2", { mphone });
+    },
+    getFindID3: (req, res) => {
+        const userID = req.session.userID;
+        res.render("home/findID3", { userID });
+    },
+    getFindPW: (req, res) => {
+        res.render("home/findPW");
+    },
+    getFindPW2: (req, res) => {
+        const mphone = req.query.mphone;
+        res.render("home/findPW2", { mphone });
+    },
+    getResetPW: (req, res) => {
+        res.render("home/resetPW");
     }
-    // getFindpw: (req, res) => {
-    //     res.render("home/findpw");
-    // },
 };
 
 const process = {
@@ -116,35 +135,89 @@ const process = {
         } else { 
             res.json({success : false, msg : '인증번호가 일치하지 않습니다.'});
         }
+    },
+    findID: (req, res) => {
+        const name = req.body.name;
+        const mphone = req.body.mphone;
+        const query = "SELECT * FROM users WHERE name=? AND mphone=?";
+        db.query(query, [name,mphone], (err, result) => {
+            if (err) console.log(err);
+            if (result.length === 0) {
+                res.json({success: false, msg:'일치하는 아이디가 없습니다.'});
+            } else {
+                function generateRandomCode() {
+                    const randomNum = Math.floor(Math.random() * 1000000);
+                    return String(randomNum).padStart(6, '0');
+                }
+                const randomCode = generateRandomCode();
+                const content = `[챌린지 플러스] 인증번호 [${randomCode}] 입니다.`;
+                sendMessage(mphone, content);
+                req.session.userID = result[0].id;
+                req.session.randomCode = randomCode;
+                req.session.codeExpiry = Date.now() + 1000 * 60 * 5
+                res.json({success: true, mphone});
+            }
+        });
+    },
+    findID2: (req, res) => {
+        const userCode = req.body.verificationCode;
+        const sessionCode = req.session.randomCode;
+        const codeExpiry = req.session.codeExpiry;
+        if (Date.now() > codeExpiry) {
+            return res.json({success : false, msg : '인증 시간이 만료되었습니다.'});
+        }
+        if (userCode === sessionCode) {
+            res.json({success : true});
+        } else { 
+            res.json({success : false, msg : '인증번호가 일치하지 않습니다.'});
+        }
+    },
+    findPW: (req, res) => {
+        const id = req.body.id;
+        const name = req.body.name;
+        const mphone = req.body.mphone;
+        const query = "SELECT * FROM users WHERE id=? AND name=? AND mphone=?";
+        db.query(query, [id, name,mphone], (err, result) => {
+            if (err) console.log(err);
+            if (result.length === 0) {
+                res.json({success: false, msg:'일치하는 아이디가 없습니다.'});
+            } else {
+                function generateRandomCode() {
+                    const randomNum = Math.floor(Math.random() * 1000000);
+                    return String(randomNum).padStart(6, '0');
+                }
+                const randomCode = generateRandomCode();
+                const content = `[챌린지 플러스] 인증번호 [${randomCode}] 입니다.`;
+                sendMessage(mphone, content);
+                req.session.userID = id;
+                req.session.randomCode = randomCode;
+                req.session.codeExpiry = Date.now() + 1000 * 60 * 5
+                res.json({success: true, mphone});
+            }
+        });
+    },
+    findPW2: (req, res) => {
+        const userCode = req.body.verificationCode;
+        const sessionCode = req.session.randomCode;
+        const codeExpiry = req.session.codeExpiry;
+        if (Date.now() > codeExpiry) {
+            return res.json({success : false, msg : '인증 시간이 만료되었습니다.'});
+        }
+        if (userCode === sessionCode) {
+            res.json({success : true});
+        } else { 
+            res.json({success : false, msg : '인증번호가 일치하지 않습니다.'});
+        }
+    },
+    resetPW: async (req, res) => {
+        const id = req.session.userID;
+        const { password, salt } = await crypto.createHashedPassword(req.body.password);
+        const query = "UPDATE users SET password = ?, salt = ? WHERE id = ?";
+        db.query(query, [password, salt, id], (err, result) => {
+            if (err) res.json({succeess: false, msg:err});
+            if (result) res.json({success: true});
+        })
     }
-
-    
-    // findpw: async (req, res) => {
-    //     const query = "SELECT email FROM users WHERE id= ?;";
-    //     db.query(query, req.body.id, (err, result) => {
-    //         if (err) console.log(err);
-    //         if (result) {
-    //             const number = UserStorage.generateRandom(111111, 999999);
-    //             const email = result[0].email;
-    //             const maskingEmail = UserStorage.emailSecurity(email);
-    //             const mailOptions = {
-    //                 from : "qwe3488@naver.com",
-    //                 to : email,
-    //                 subject : "챌린지 플러스 인증코드입니다.",
-    //                 html : '<h1>인증번호 :'+ number +'</h1>'
-    //             }
-    //             smtpTransport.sendMail(mailOptions, (err, response) => {
-    //                 console.log("response", response);
-    //                 if (err) {
-    //                     res.json({success: false, msg: '메일 전송에 실패하였습니다.'});
-    //                     smtpTransport.close() // 전송종료
-    //                 } else {
-    //                     res.render("home/findpw2", {'data': result, 'code': number, 'maskingEmail': maskingEmail});
-    //                 }
-    //             });
-    //         }
-    //     });  
-    // },
 };
 
 module.exports = {
