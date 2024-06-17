@@ -389,6 +389,60 @@ const output = {
             }
         });
     },
+    getPicniclist: (req, res) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 15;
+        const offset = (page - 1) * limit;
+
+        const totalQuery = "SELECT COUNT(*) as total FROM picnicboard";
+        db.query(totalQuery, (err, totalResult) => {
+            if (err) console.log(err);
+            const totalCount = totalResult[0].total;
+            const totalPages = Math.ceil(totalCount / limit);
+            const query = "SELECT * FROM picnicboard ORDER BY postDate DESC LIMIT ? OFFSET ?";
+            db.query(query, [limit, offset], (err, result) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    data: result,
+                    length: result.length,
+                    currentPage: page,
+                    totalPages: totalPages,
+                    content: 'adminPicnicList'
+                });
+            });
+        });
+    },
+    getPicnicview: (req, res) => {
+        const postID = req.params.postID;
+        const query = "SELECT * FROM picnicboard WHERE postID=? ORDER BY postDate DESC;";
+        db.query(query, [postID], (err, result) => {
+            if (err) console.log(err);
+            if (result) res.render("admin/adminList", {
+                'data': result,
+                'imageNum':JSON.parse(result[0].filename).length,
+                'image':JSON.parse(result[0].filename),
+                content : 'adminPicnicView'
+            });
+        });
+    },
+    getPicnicWrite: (req, res) => {
+        res.render("admin/adminList", { content: 'adminPicnicWrite'});
+    },
+    getPicnicSearch: (req, res) => {
+        const keyword = req.query.keyword.toUpperCase();
+        const filter = req.query.filter;
+
+        const query = "SELECT * FROM picnicboard";
+        db.query(query, (err, data) => {
+            if (err) console.log(err);
+            if (data) {
+                const result = data.filter(item => {
+                    return item[filter].toUpperCase().includes(keyword);
+                });
+                res.json(result);
+            }
+        });
+    },
 }
 
 const process = {
@@ -736,6 +790,52 @@ const process = {
             console.log(error);
             res.json({success: false, msg: "메시지 전송에 실패했습니다."});
         }
+    },
+    deletePicnicPost: (req, res) => {
+        const postID = req.params.postID;
+        const query1 = "SELECT * FROM picnicboard WHERE postID = ?";
+        db.query(query1, [postID], (err, result) => {
+            if (err) console.log(err);
+            if (result) {
+                const filename = JSON.parse(result[0].filename);
+                const fileNum = filename.length;
+                for (i=0; i<fileNum; i++) {
+                    const key = filename[i];
+                    deleteFileFromS3(key);
+                }
+                const query2 = "DELETE FROM picnicboard WHERE postID = ?;";
+                db.query(query2, [postID], (err, result) => {
+                    if (err) return console.log(err);
+                    if (result) res.json({success: true});
+                });
+            }
+        }); 
+    },
+    PicnicWrite: (req, res) => {
+        const data = req.body;
+        let images = [];
+        for (let i=0; i < req.files.length; i++) {
+            images.push(req.files[i].key.split('/').pop());
+        }
+        const image = JSON.stringify(images);
+        let imagesOriginalName = [];
+        for (let i=0; i < req.files.length; i++) {
+            imagesOriginalName.push(req.files[i].originalname);
+        }
+        const imageOriginalName = JSON.stringify(imagesOriginalName);
+        const postDate = new Date();
+        const query = "INSERT INTO picnicboard (title, content, nickname, postDate, filename, fileOriginalName) values (?, ?, '관리자', ?, ?, ?);";
+        const dbdata = [
+            data.title,
+            data.content,
+            postDate,
+            image,
+            imageOriginalName
+        ];
+        db.query(query, dbdata, (err, result) => {
+            if (err) return console.log(err);
+            if (result) res.json({success: true});
+        });
     },
 }
 

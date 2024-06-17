@@ -29,9 +29,10 @@ router.get("/clublist", ctrl.session.sessionExpiration, ctrl.output.getClublist)
 router.get("/clubview/:postID", ctrl.session.sessionExpiration, ctrl.output.getClubview);
 router.get("/club/write", ctrl.session.sessionExpiration, ctrl.output.getClubWrite);
 router.get("/clublist/search", ctrl.session.sessionExpiration, ctrl.output.getClubSearch);
-// router.get("/picniclist", ctrl.session.sessionExpiration, ctrl.output.getPicniclist);
-// router.get("/picnicview/:postID", ctrl.session.sessionExpiration, ctrl.output.getPicnicview);
-// router.get("/picnic/write", ctrl.session.sessionExpiration, ctrl.output.getPicnicWrite);
+router.get("/picniclist", ctrl.session.sessionExpiration, ctrl.output.getPicniclist);
+router.get("/picnicview/:postID", ctrl.session.sessionExpiration, ctrl.output.getPicnicview);
+router.get("/picnic/write", ctrl.session.sessionExpiration, ctrl.output.getPicnicWrite);
+router.get("/picniclist/search", ctrl.session.sessionExpiration, ctrl.output.getPicnicSearch);
 // router.get("/joblist", ctrl.session.sessionExpiration, ctrl.output.getJoblist);
 // router.get("/jobview/:postID", ctrl.session.sessionExpiration, ctrl.output.getJobview);
 // router.get("/job/write", ctrl.session.sessionExpiration, ctrl.output.getJobWrite);
@@ -51,8 +52,8 @@ router.post("/free/write", ctrl.session.sessionExpiration, upload.array('image',
 router.post("/clubview/delete/:postID", ctrl.session.sessionExpiration, ctrl.process.deleteClubPost);
 router.post("/club/write", ctrl.session.sessionExpiration, upload.array('image', 5), ctrl.process.ClubWrite);
 router.post("/message", ctrl.session.sessionExpiration, ctrl.process.sendMessages);
-// router.post("/picnicview/delete/:postID", ctrl.session.sessionExpiration, ctrl.process.deletePicnicPost);
-// router.post("/picnic/write", ctrl.session.sessionExpiration, upload.array('image', 5), ctrl.process.PicnicWrite);
+router.post("/picnicview/delete/:postID", ctrl.session.sessionExpiration, ctrl.process.deletePicnicPost);
+router.post("/picnic/write", ctrl.session.sessionExpiration, upload.array('image', 5), ctrl.process.PicnicWrite);
 // router.post("/jobview/delete/:postID", ctrl.session.sessionExpiration, ctrl.process.deleteJobPost);
 // router.post("/job/write", ctrl.session.sessionExpiration, upload.array('image', 5), ctrl.process.JobWrite);
 

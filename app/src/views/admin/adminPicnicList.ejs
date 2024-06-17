@@ -1,0 +1,33 @@
+<div class="container" data-current-page="<%= currentPage %>" data-total-pages="<%= totalPages %>">
+    <h1 class="centered">나들이정보 게시글 목록</h1>
+    <div class="search-container with-write-button">
+        <div class="search-elements">
+            <select id="searchField">
+                <option value="title">제목</option>
+                <option value="content">내용</option>
+                <option value="nickname">작성자</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="검색어를 입력해주세요.">
+            <button id="search">검색</button>
+        </div>
+        <button id="write" class="write-button">글쓰기</button>
+    </div>
+    <table id="picniclist">
+        <tr>
+            <th>제목</th>
+            <th>내용</th>
+            <th>작성자</th>
+            <th>작성일</th>
+        </tr>
+        <% for (let i = 0; i < length; i++) { %>
+        <tr>
+            <td class="list-title"><a href="/admin/picnicview/<%= data[i].postID %>"><%= data[i].title %></a></td>
+            <td class="list-content"><%= data[i].content %></td>
+            <td><%= data[i].nickname %></td>
+            <td><%= data[i].postDate %></td>
+        </tr>
+        <% } %>
+    </table>
+    <ul id="page" class="page"></ul>
+</div>
+<script src="/js/admin/adminpicniclist.js"></script>

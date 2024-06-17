@@ -26,12 +26,12 @@
         </tr>
         <% for (let i = 0; i < length; i++) { %>
         <tr>
-            <td class="title"><%= data[i].title %></td>
+            <td id="title" class="list-title"><%= data[i].title %></td>
             <td><%= data[i].category %></td>
-            <td class="id"><%= data[i].id %></td>
+            <td id="id"><%= data[i].id %></td>
             <td><%= data[i].name %></td>
             <td><%= data[i].mphone %></td>
-            <td class="applydate"><%= data[i].applydate %></td>
+            <td id="applydate"><%= data[i].applydate %></td>
             <td><%= data[i].price %></td>
             <td>
                 <% if (data[i].recruitStatus == 'ing') { %>

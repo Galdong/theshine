@@ -4,9 +4,9 @@ const deleteBtn = document.querySelectorAll('#delete');
 
 changeBtn.forEach(function (button) {
     button.addEventListener("click", function() {
-        const title = button.closest('tr').querySelector('.title').textContent;
-        const id = button.closest('tr').querySelector('.id').textContent;
-        const applydate = button.closest('tr').querySelector('.applydate').textContent;
+        const title = button.closest('tr').querySelector('#title').textContent;
+        const id = button.closest('tr').querySelector('#id').textContent;
+        const applydate = button.closest('tr').querySelector('#applydate').textContent;
         const response = confirm("신청현황을 변경하시겠습니까?");
         if (response) {
             change(title, id, applydate);
