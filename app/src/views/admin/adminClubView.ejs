@@ -1,11 +1,11 @@
-<div class="post-details">
-    <h1 class="title">제목: <%= data[0].title %></h1>
+<div class="post-details" data-postID="<%= data.postID %>">
+    <h1 class="title">제목: <%= data.title %></h1>
     <div class="meta">
-        <span class="author">작성자: <%= data[0].nickname %></span>
-        <span class="date">작성일: <%= data[0].postDate %></span>
+        <span>작성자: <%= data.nickname %></span>
+        <span>작성일: <%= data.postDate %></span>
     </div>
     <div class="content">
-        <div class="content-text"><p><%= data[0].content %></p></div>
+        <div class="content-text"><p><%= data.content %></p></div>
         <div class="image-preview">
             <% for (let i=0; i < imageNum; i++) { %>
                 <img src="https://s3-ap-northeast-2.amazonaws.com/challengeplus-images/images/<%= image[i] %>" alt="Image <%= i + 1 %>" height="500" width="500">
@@ -15,6 +15,25 @@
     <div class="button-group">
         <button class="list-button">목록</button>
         <button class="delete-button">삭제</button>
+    </div>
+    <div class="comments-section">
+        <h2>댓글 (<%= comments.length %>)</h2>
+        <div class="comment-form">
+            <textarea id="commentContent" name="commentContent" placeholder="댓글 내용을 입력해주세요." required></textarea>
+            <button class="comment-write">댓글 작성</button>
+        </div>
+        <% comments.forEach(function(comment) { %>
+            <div class="comment">
+                <div class="comment-meta">
+                    <span class="comment-nickname">작성자: <%= comment.nickname %></span>
+                    <span class="comment-right">
+                        <span class="comment-date"><%= comment.postDate %></span>
+                        <a class="comment-delete" data-commentID="<%= comment.commentID %>">삭제</a>
+                    </span>
+                </div>
+                <div class="comment-content"><p><%= comment.content %></p></div>
+            </div>
+        <% }); %>
     </div>
 </div>
 <script src="/js/admin/adminclubview.js"></script>

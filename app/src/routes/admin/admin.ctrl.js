@@ -309,11 +309,17 @@ const output = {
         const query = "SELECT * FROM freeboard WHERE postID=? ORDER BY postDate DESC;";
         db.query(query, [postID], (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminList", {
-                'data': result,
-                'imageNum':JSON.parse(result[0].filename).length,
-                'image':JSON.parse(result[0].filename),
-                content : 'adminFreeView'
+            const data = result[0];
+            const query2 = "SELECT * FROM freeboardComment WHERE postID=? ORDER BY postDate DESC;";
+            db.query(query2, [postID], (err, result2) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    data,
+                    'imageNum':JSON.parse(data.filename).length,
+                    'image':JSON.parse(data.filename),
+                    comments : result2,
+                    content : 'adminFreeView'
+                });
             });
         });
     },
@@ -363,11 +369,17 @@ const output = {
         const query = "SELECT * FROM clubboard WHERE postID=? ORDER BY postDate DESC;";
         db.query(query, [postID], (err, result) => {
             if (err) console.log(err);
-            if (result) res.render("admin/adminList", {
-                'data': result,
-                'imageNum':JSON.parse(result[0].filename).length,
-                'image':JSON.parse(result[0].filename),
-                content : 'adminClubView'
+            const data = result[0];
+            const query2 = "SELECT * FROM clubboardComment WHERE postID=? ORDER BY postDate DESC;";
+            db.query(query2, [postID], (err, result2) => {
+                if (err) console.log(err);
+                if (result) res.render("admin/adminList", {
+                    data,
+                    'imageNum':JSON.parse(data.filename).length,
+                    'image':JSON.parse(data.filename),
+                    comments : result2,
+                    content : 'adminClubView'
+                });
             });
         });
     },
@@ -712,6 +724,24 @@ const process = {
             if (result) res.json({success: true});
         });
     },
+    FreeCommentWrite: (req, res) => {
+        const postID = req.params.postID;
+        const content = req.body.content;
+        const postDate = new Date();
+        const query = "INSERT INTO freeboardComment (postID, nickname, content, postDate) values (?, '관리자', ?, ?);";
+        db.query(query, [postID, content, postDate], (err, result) => {
+            if (err) console.log(err);
+            if (result) res.json({success: true});
+        });
+    },
+    FreeCommentDelete: (req, res) => {
+        const commentID = req.params.commentID;
+        const query = "DELETE FROM freeboardComment WHERE commentID = ?";
+        db.query(query, [commentID], (err, result) => {
+            if (err) console.log(err);
+            if (result) res.json({success: true});
+        })
+    },
     deleteClubPost: (req, res) => {
         const postID = req.params.postID;
         const query1 = "SELECT * FROM clubboard WHERE postID = ?";
@@ -757,6 +787,24 @@ const process = {
             if (err) return console.log(err);
             if (result) res.json({success: true});
         });
+    },
+    ClubCommentWrite: (req, res) => {
+        const postID = req.params.postID;
+        const content = req.body.content;
+        const postDate = new Date();
+        const query = "INSERT INTO clubboardComment (postID, nickname, content, postDate) values (?, '관리자', ?, ?);";
+        db.query(query, [postID, content, postDate], (err, result) => {
+            if (err) console.log(err);
+            if (result) res.json({success: true});
+        });
+    },
+    ClubCommentDelete: (req, res) => {
+        const commentID = req.params.commentID;
+        const query = "DELETE FROM clubboardComment WHERE commentID = ?";
+        db.query(query, [commentID], (err, result) => {
+            if (err) console.log(err);
+            if (result) res.json({success: true});
+        })
     },
     sendMessages: async (req, res) => {
         const content = req.body.message;

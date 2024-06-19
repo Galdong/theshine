@@ -49,8 +49,12 @@ router.post("/art/write", ctrl.session.sessionExpiration, upload.array('image', 
 router.post("/pro/write", ctrl.session.sessionExpiration, upload.array('image', 5), ctrl.process.ProWrite);
 router.post("/freeview/delete/:postID", ctrl.session.sessionExpiration, ctrl.process.deleteFreePost);
 router.post("/free/write", ctrl.session.sessionExpiration, upload.array('image', 5), ctrl.process.FreeWrite);
+router.post("/freeview/commentwrite/:postID", ctrl.session.sessionExpiration, ctrl.process.FreeCommentWrite);
+router.post("/freeview/commentdelete/:commentID", ctrl.session.sessionExpiration, ctrl.process.FreeCommentDelete);
 router.post("/clubview/delete/:postID", ctrl.session.sessionExpiration, ctrl.process.deleteClubPost);
 router.post("/club/write", ctrl.session.sessionExpiration, upload.array('image', 5), ctrl.process.ClubWrite);
+router.post("/clubview/commentwrite/:postID", ctrl.session.sessionExpiration, ctrl.process.ClubCommentWrite);
+router.post("/clubview/commentdelete/:commentID", ctrl.session.sessionExpiration, ctrl.process.ClubCommentDelete);
 router.post("/message", ctrl.session.sessionExpiration, ctrl.process.sendMessages);
 router.post("/picnicview/delete/:postID", ctrl.session.sessionExpiration, ctrl.process.deletePicnicPost);
 router.post("/picnic/write", ctrl.session.sessionExpiration, upload.array('image', 5), ctrl.process.PicnicWrite);
