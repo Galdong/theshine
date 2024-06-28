@@ -28,5 +28,34 @@
     <p><a href="/job">일자리게시판 이동</a></p>
     <p><a href="/free">자유게시판 이동</a></p>
     <p><a href="/picnic">나들이 정보게시판 이동</a></p>
+
+    <table>
+        <tr>
+            <th>제목</th>
+            <th>강사명</th>
+            <th>카테고리</th>
+            <th>모집상태</th>
+            <th>작성일</th>
+            <th>가격</th>
+        </tr>
+        <tr>
+            <% for (let i = 0; i < 5; i++) { %>
+                <tr>
+                    <td><a href="/admin/<%= data[i].field %>>/<%= data[i].postID %>"><%= data[i].title %></a></td>
+                    <td><%= data[i].instructorName %></td>
+                    <td><%= data[i].category %></td>
+                    <td>
+                        <% if (data[i].status == 'ing') { %>
+                        접수중
+                        <% } else if (data[i].status == 'end') { %>
+                        접수마감
+                        <% } %>
+                    </td>
+                    <td><%= data[i].postDate %></td>
+                    <td><%= data[i].price %></td>
+                </tr>
+            <% } %>
+        </tr>
+    </table>
 </body>
 </html>

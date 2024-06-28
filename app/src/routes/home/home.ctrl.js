@@ -7,9 +7,21 @@ const db = require("../../config/db");
 const output = {
     home: (req, res) => {
         auth.status(req,res);
-        res.render("home/index", {
-            'nickname':auth.status(req,res).split(',')[0],
-            'tag':auth.status(req,res).split(',')[1]});
+        const query = `
+        SELECT * FROM (
+            SELECT postID, title, instructorName, category, status, postDate, price, 'art' AS field FROM CulturalArtEdu
+            UNION ALL 
+            SELECT postID, title, instructorName, category, status, postDate, price, 'pro' AS field FROM ProfessionalEdu
+        ) AS edu 
+        ORDER BY STR_TO_DATE(postDate, '%Y-%m-%d %H:%i:%s') DESC LIMIT 5;`;
+        db.query(query, (err, result) => {
+            res.render("home/index", {
+                'nickname':auth.status(req,res).split(',')[0],
+                'tag':auth.status(req,res).split(',')[1],
+                'data':result
+            });
+        })
+        
     },
     login: (req, res) => {
         res.render("home/login");
